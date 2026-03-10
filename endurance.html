@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Endurance Dashboard</title>
+
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+input{
+font-size:28px;
+padding:8px;
+width:120px;
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+padding:15px;
+}
+
+.box{
+background:#1a1a1a;
+padding:20px;
+border-radius:10px;
+font-size:32px;
+}
+
+.big{
+font-size:70px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Endurance Dashboard</h1>
+
+Kartnummer
+<input id="kartNumber">
+
+<div class="grid">
+
+<div class="box big" id="pos">--</div>
+<div class="box" id="ahead">--</div>
+
+<div class="box" id="behind">--</div>
+<div class="box" id="last">--</div>
+
+<div class="box" id="best">--</div>
+<div class="box" id="laps">--</div>
+
+</div>
+
+<iframe
+id="timing"
+src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
+style="display:none"></iframe>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const kartFromURL = params.get("kart");
+
+if(kartFromURL){
+document.getElementById("kartNumber").value = kartFromURL;
+}
+
+function update(){
+
+try{
+
+let iframe=document.getElementById("timing")
+let doc=iframe.contentWindow.document
+
+let rows=doc.querySelectorAll("table tbody tr")
+let kart=document.getElementById("kartNumber").value
+
+rows.forEach((r,i)=>{
+
+let cols=r.querySelectorAll("td")
+
+if(cols.length>7 && cols[1].innerText==kart){
+
+pos.innerText="P"+(i+1)
+ahead.innerText="Ahead "+cols[4].innerText
+last.innerText="Last "+cols[6].innerText
+best.innerText="Best "+cols[7].innerText
+laps.innerText="Laps "+cols[3].innerText
+
+if(rows[i+1]){
+let next=rows[i+1].querySelectorAll("td")
+behind.innerText="Behind "+next[4].innerText
+}
+
+}
+
+})
+
+}catch(e){}
+
+}
+
+setInterval(update,2000)
+
+</script>
+
+</body>
+</html>
