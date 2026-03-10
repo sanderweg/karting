@@ -15,33 +15,42 @@ margin:0;
 }
 
 header{
-font-size:35px;
-padding:20px;
+font-size:40px;
+padding:25px;
 }
 
 input{
-font-size:28px;
-padding:8px;
+font-size:30px;
+padding:10px;
 width:120px;
 text-align:center;
+margin-bottom:20px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-padding:15px;
+.container{
+display:flex;
+flex-direction:column;
+gap:30px;
+padding:20px;
 }
 
 .box{
 background:#1a1a1a;
-padding:20px;
-border-radius:10px;
-font-size:32px;
+padding:40px;
+border-radius:15px;
+font-size:40px;
 }
 
 .big{
 font-size:70px;
+}
+
+.green{
+color:#00ff9c;
+}
+
+.red{
+color:#ff4d4d;
 }
 
 </style>
@@ -52,23 +61,31 @@ font-size:70px;
 
 <header>Qualifying Dashboard</header>
 
-Kartnummer
+Kartnummer  
+<br>
 <input id="kartNumber" placeholder="12">
 
-<div class="grid">
+<div class="container">
 
-<div class="box big" id="pos">--</div>
-<div class="box" id="best">--</div>
+<div class="box big" id="myBest">
+My Best: --
+</div>
 
-<div class="box" id="last">--</div>
-<div class="box" id="gap">--</div>
+<div class="box big" id="trackBest">
+Track Best: --
+</div>
+
+<div class="box big" id="gap">
+Gap: --
+</div>
 
 </div>
 
 <iframe
 id="timing"
 src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
-style="display:none"></iframe>
+style="display:none">
+</iframe>
 
 <script>
 
@@ -77,6 +94,23 @@ const kartFromURL = params.get("kart");
 
 if(kartFromURL){
 document.getElementById("kartNumber").value = kartFromURL;
+}
+
+function timeToSeconds(t){
+
+if(!t || t=="--") return null
+
+let parts=t.split(":")
+let sec=0
+
+if(parts.length==2){
+sec=parseFloat(parts[0])*60+parseFloat(parts[1])
+}else{
+sec=parseFloat(t)
+}
+
+return sec
+
 }
 
 function update(){
@@ -89,20 +123,57 @@ let doc=iframe.contentWindow.document
 let rows=doc.querySelectorAll("table tbody tr")
 let kart=document.getElementById("kartNumber").value
 
-rows.forEach((r,i)=>{
+let myBest=null
+let trackBest=null
+
+rows.forEach((r)=>{
 
 let cols=r.querySelectorAll("td")
 
-if(cols.length>7 && cols[1].innerText==kart){
+if(cols.length>7){
 
-pos.innerText="P"+(i+1)
-best.innerText="Best "+cols[7].innerText
-last.innerText="Last "+cols[6].innerText
-gap.innerText="Gap "+cols[4].innerText
+let best=cols[7].innerText
+let bestSec=timeToSeconds(best)
+
+if(bestSec){
+
+if(trackBest==null || bestSec < trackBest){
+trackBest=bestSec
+}
+
+}
+
+if(cols[1].innerText==kart){
+myBest=bestSec
+document.getElementById("myBest").innerText="My Best: "+best
+}
 
 }
 
 })
+
+if(trackBest){
+
+let min=Math.floor(trackBest/60)
+let sec=(trackBest%60).toFixed(3)
+
+document.getElementById("trackBest").innerText="Track Best: "+min+":"+sec
+
+}
+
+if(myBest && trackBest){
+
+let diff=(myBest-trackBest).toFixed(3)
+
+document.getElementById("gap").innerText="Gap: +"+diff+"s"
+
+if(diff<0.2){
+gap.className="box big green"
+}else{
+gap.className="box big red"
+}
+
+}
 
 }catch(e){}
 
