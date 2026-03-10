@@ -6,25 +6,44 @@
 
 <style>
 
-body{background:#050505;color:white;font-family:Arial;text-align:center}
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+text-align:center;
+margin:0;
+}
 
-input{font-size:28px;padding:8px;width:120px;text-align:center}
+header{
+font-size:40px;
+padding:20px;
+}
+
+input{
+font-size:28px;
+padding:8px;
+width:120px;
+text-align:center;
+margin-bottom:20px;
+}
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
-padding:15px;
+gap:20px;
+padding:20px;
 }
 
 .box{
 background:#1a1a1a;
-padding:20px;
-border-radius:10px;
-font-size:32px;
+padding:35px;
+border-radius:15px;
+font-size:40px;
 }
 
-.big{font-size:70px}
+.big{
+font-size:80px;
+}
 
 </style>
 
@@ -32,25 +51,37 @@ font-size:32px;
 
 <body>
 
-<h1>Sprint Dashboard</h1>
+<header>Sprint Race Dashboard</header>
 
-Kartnummer
-<input id="kartNumber">
+Kartnummer  
+<br>
+<input id="kartNumber" placeholder="12">
 
 <div class="grid">
 
-<div class="box big" id="pos">--</div>
-<div class="box" id="ahead">--</div>
+<div class="box big" id="position">
+Pos --
+</div>
 
-<div class="box" id="behind">--</div>
-<div class="box" id="last">--</div>
+<div class="box" id="ahead">
+Ahead --
+</div>
+
+<div class="box" id="behind">
+Behind --
+</div>
+
+<div class="box big" id="timeLeft">
+Time --
+</div>
 
 </div>
 
 <iframe
 id="timing"
 src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
-style="display:none"></iframe>
+style="display:none">
+</iframe>
 
 <script>
 
@@ -77,18 +108,32 @@ let cols=r.querySelectorAll("td")
 
 if(cols.length>7 && cols[1].innerText==kart){
 
-pos.innerText="P"+(i+1)
-ahead.innerText="Ahead "+cols[4].innerText
-last.innerText="Last "+cols[6].innerText
+// positie
+position.innerText="P"+(i+1)
 
+// gap naar voorganger
+ahead.innerText="Ahead "+cols[4].innerText
+
+// achterligger
 if(rows[i+1]){
+
 let next=rows[i+1].querySelectorAll("td")
 behind.innerText="Behind "+next[4].innerText
+
 }
 
 }
 
 })
+
+// resterende tijd
+let headerTimer=doc.querySelector(".session-info")
+
+if(headerTimer){
+
+timeLeft.innerText=headerTimer.innerText
+
+}
 
 }catch(e){}
 
