@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kart Dashboard</title>
+
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+text-align:center;
+margin:0;
+}
+
+header{
+font-size:40px;
+padding:40px;
+}
+
+.menu{
+display:flex;
+justify-content:center;
+gap:30px;
+margin-top:50px;
+flex-wrap:wrap;
+}
+
+.card{
+
+background:#1b1b1b;
+padding:40px;
+border-radius:15px;
+font-size:30px;
+cursor:pointer;
+width:250px;
+transition:0.2s;
+
+}
+
+.card:hover{
+background:#333;
+transform:scale(1.05);
+}
+
+.selectBox{
+margin-top:40px;
+display:none;
+}
+
+select{
+font-size:25px;
+padding:10px;
+}
+
+button{
+font-size:25px;
+padding:10px 20px;
+margin-left:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>Kart Race Dashboards</header>
+
+<div class="menu">
+
+<div class="card" onclick="openMode('quali')">
+🏁 Quali
+</div>
+
+<div class="card" onclick="openMode('sprint')">
+🏎 Sprint
+</div>
+
+<div class="card" onclick="openMode('endurance')">
+⛽ Endurance
+</div>
+
+</div>
+
+<div class="selectBox" id="kartSelector">
+
+<h2>Select kart</h2>
+
+<select id="kartList"></select>
+
+<button onclick="start()">Start dashboard</button>
+
+</div>
+
+<iframe
+id="timing"
+src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
+style="display:none">
+</iframe>
+
+<script>
+
+let selectedMode=null
+
+function openMode(mode){
+
+selectedMode=mode
+
+document.getElementById("kartSelector").style.display="block"
+
+loadKarts()
+
+}
+
+function loadKarts(){
+
+setTimeout(()=>{
+
+let iframe=document.getElementById("timing")
+let doc=iframe.contentWindow.document
+
+let rows=doc.querySelectorAll("table tbody tr")
+
+let select=document.getElementById("kartList")
+
+select.innerHTML=""
+
+rows.forEach(r=>{
+
+let cols=r.querySelectorAll("td")
+
+if(cols.length>1){
+
+let kart=cols[1].innerText
+
+let opt=document.createElement("option")
+
+opt.value=kart
+opt.text="Kart "+kart
+
+select.appendChild(opt)
+
+}
+
+})
+
+},2000)
+
+}
+
+function start(){
+
+let kart=document.getElementById("kartList").value
+
+window.location.href=selectedMode+".html?kart="+kart
+
+}
+
+</script>
+
+</body>
+</html>
