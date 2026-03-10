@@ -11,6 +11,17 @@ background:#050505;
 color:white;
 font-family:Arial;
 text-align:center;
+margin:0;
+}
+
+header{
+font-size:38px;
+padding:15px;
+}
+
+#clock{
+font-size:35px;
+margin-bottom:10px;
 }
 
 input{
@@ -18,24 +29,25 @@ font-size:28px;
 padding:8px;
 width:120px;
 text-align:center;
+margin-bottom:20px;
 }
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
-padding:15px;
+gap:20px;
+padding:20px;
 }
 
 .box{
 background:#1a1a1a;
-padding:20px;
-border-radius:10px;
-font-size:32px;
+padding:30px;
+border-radius:15px;
+font-size:34px;
 }
 
 .big{
-font-size:70px;
+font-size:75px;
 }
 
 </style>
@@ -44,31 +56,51 @@ font-size:70px;
 
 <body>
 
-<h1>Endurance Dashboard</h1>
+<header>Endurance Race Dashboard</header>
 
-Kartnummer
-<input id="kartNumber">
+<div id="clock">--:--:--</div>
+
+Kartnummer  
+<br>
+<input id="kartNumber" placeholder="12">
 
 <div class="grid">
 
-<div class="box big" id="pos">--</div>
-<div class="box" id="ahead">--</div>
+<div class="box big" id="position">
+Pos --
+</div>
 
-<div class="box" id="behind">--</div>
-<div class="box" id="last">--</div>
+<div class="box big" id="timeLeft">
+Race --
+</div>
 
-<div class="box" id="best">--</div>
-<div class="box" id="laps">--</div>
+<div class="box" id="ahead">
+Ahead --
+</div>
+
+<div class="box" id="aheadStops">
+Ahead stops --
+</div>
+
+<div class="box" id="behind">
+Behind --
+</div>
+
+<div class="box" id="behindStops">
+Behind stops --
+</div>
 
 </div>
 
 <iframe
 id="timing"
 src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
-style="display:none"></iframe>
+style="display:none">
+</iframe>
 
 <script>
 
+// kart uit URL
 const params = new URLSearchParams(window.location.search);
 const kartFromURL = params.get("kart");
 
@@ -76,6 +108,22 @@ if(kartFromURL){
 document.getElementById("kartNumber").value = kartFromURL;
 }
 
+// klok
+function updateClock(){
+
+let now = new Date()
+
+let h = String(now.getHours()).padStart(2,"0")
+let m = String(now.getMinutes()).padStart(2,"0")
+let s = String(now.getSeconds()).padStart(2,"0")
+
+document.getElementById("clock").innerText = h+":"+m+":"+s
+
+}
+
+setInterval(updateClock,1000)
+
+// timing data
 function update(){
 
 try{
@@ -90,22 +138,44 @@ rows.forEach((r,i)=>{
 
 let cols=r.querySelectorAll("td")
 
-if(cols.length>7 && cols[1].innerText==kart){
+if(cols.length>8 && cols[1].innerText==kart){
 
-pos.innerText="P"+(i+1)
+// positie
+position.innerText="P"+(i+1)
+
+// gap naar voorganger
 ahead.innerText="Ahead "+cols[4].innerText
-last.innerText="Last "+cols[6].innerText
-best.innerText="Best "+cols[7].innerText
-laps.innerText="Laps "+cols[3].innerText
 
+// pitstops voorganger
+if(rows[i-1]){
+
+let prev=rows[i-1].querySelectorAll("td")
+aheadStops.innerText="Ahead stops "+prev[8].innerText
+
+}
+
+// achterligger
 if(rows[i+1]){
+
 let next=rows[i+1].querySelectorAll("td")
+
 behind.innerText="Behind "+next[4].innerText
+behindStops.innerText="Behind stops "+next[8].innerText
+
 }
 
 }
 
 })
+
+// resterende racetijd
+let headerTimer=doc.querySelector(".session-info")
+
+if(headerTimer){
+
+timeLeft.innerText=headerTimer.innerText
+
+}
 
 }catch(e){}
 
