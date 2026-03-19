@@ -2,180 +2,38 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Quali Dashboard</title>
+<title>Quali</title>
+<script src="core.js"></script>
 
 <style>
-
-body{
-background:#050505;
-color:white;
-font-family:Arial;
-text-align:center;
-margin:0;
-}
-
-header{
-font-size:40px;
-padding:25px;
-}
-
-input{
-font-size:30px;
-padding:10px;
-width:120px;
-text-align:center;
-margin-bottom:20px;
-}
-
-.container{
-display:flex;
-flex-direction:column;
-gap:30px;
-padding:20px;
-}
-
-.box{
-background:#1a1a1a;
-padding:40px;
-border-radius:15px;
-font-size:40px;
-}
-
-.big{
-font-size:70px;
-}
-
-.green{
-color:#00ff9c;
-}
-
-.red{
-color:#ff4d4d;
-}
-
+body{background:#000;color:white;text-align:center;font-family:Arial;}
+.big{font-size:70px;margin:30px;}
 </style>
-
 </head>
 
 <body>
 
-<header>Qualifying Dashboard</header>
+<h1>Qualifying</h1>
 
-Kartnummer  
-<br>
-<input id="kartNumber" placeholder="12">
-
-<div class="container">
-
-<div class="box big" id="myBest">
-My Best: --
-</div>
-
-<div class="box big" id="trackBest">
-Track Best: --
-</div>
-
-<div class="box big" id="gap">
-Gap: --
-</div>
-
-</div>
-
-<iframe
-id="timing"
-src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/?fullscreen=true#live"
-style="display:none">
-</iframe>
+<div class="big" id="best">--</div>
+<div class="big" id="fastest">--</div>
+<div class="big" id="gap">--</div>
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
-const kartFromURL = params.get("kart");
+let kart = new URLSearchParams(window.location.search).get("kart")
 
-if(kartFromURL){
-document.getElementById("kartNumber").value = kartFromURL;
-}
+async function update(){
 
-function timeToSeconds(t){
+let raw = await getData()
+if(!raw) return
 
-if(!t || t=="--") return null
+let data = parseData(raw)
 
-let parts=t.split(":")
-let sec=0
-
-if(parts.length==2){
-sec=parseFloat(parts[0])*60+parseFloat(parts[1])
-}else{
-sec=parseFloat(t)
-}
-
-return sec
-
-}
-
-function update(){
-
-try{
-
-let iframe=document.getElementById("timing")
-let doc=iframe.contentWindow.document
-
-let rows=doc.querySelectorAll("table tbody tr")
-let kart=document.getElementById("kartNumber").value
-
-let myBest=null
-let trackBest=null
-
-rows.forEach((r)=>{
-
-let cols=r.querySelectorAll("td")
-
-if(cols.length>7){
-
-let best=cols[7].innerText
-let bestSec=timeToSeconds(best)
-
-if(bestSec){
-
-if(trackBest==null || bestSec < trackBest){
-trackBest=bestSec
-}
-
-}
-
-if(cols[1].innerText==kart){
-myBest=bestSec
-document.getElementById("myBest").innerText="My Best: "+best
-}
-
-}
-
-})
-
-if(trackBest){
-
-let min=Math.floor(trackBest/60)
-let sec=(trackBest%60).toFixed(3)
-
-document.getElementById("trackBest").innerText="Track Best: "+min+":"+sec
-
-}
-
-if(myBest && trackBest){
-
-let diff=(myBest-trackBest).toFixed(3)
-
-document.getElementById("gap").innerText="Gap: +"+diff+"s"
-
-if(diff<0.2){
-gap.className="box big green"
-}else{
-gap.className="box big red"
-}
-
-}
-
-}catch(e){}
+// ⚠️ placeholder (best lap parsing komt later)
+best.innerText = "My Best: ..."
+fastest.innerText = "Fastest: ..."
+gap.innerText = "Gap: ..."
 
 }
 
