@@ -3,7 +3,7 @@ let index = 0
 
 async function getData(){
 
-let target = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"
+let target = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/commonv2/functions/live_ajax.php"
 + "?init=" + init
 + "&index=" + index
 
