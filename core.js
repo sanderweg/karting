@@ -1,51 +1,130 @@
-let iframe
+let API_URL = "https://karting.vercel.app/api/apex" // 👈 pas aan na deploy
 
-function createFrame(){
+async function getData() {
+    try {
+        let res = await fetch(API_URL)
+        let data = await res.json()
 
-if(document.getElementById("apexFrame")) return
+        console.log("DATA:", data)
 
-iframe = document.createElement("iframe")
-iframe.id = "apexFrame"
-iframe.src = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"
-iframe.style.display = "none"
+        return data
 
-document.body.appendChild(iframe)
-
+    } catch (e) {
+        console.error("Fetch error:", e)
+        return null
+    }
 }
 
-async function getRows(){
+// 🔹 alle karts ophalen
+async function getKarts() {
+    let data = await getData()
 
-createFrame()
+    if (!data || !data.tracks) return []
 
-try{
+    let karts = []
 
-let doc = iframe.contentDocument || iframe.contentWindow.document
+    data.tracks.forEach(track => {
+        if (track.sessions) {
+            track.sessions.forEach(session => {
+                if (session.drivers) {
+                    session.drivers.forEach(driver => {
+                        if (driver.number) {
+                            karts.push(driver.number)
+                        }
+                    })
+                }
+            })
+        }
+    })
 
-let rows = doc.querySelectorAll("table tbody tr")
-
-if(rows.length === 0) return null
-
-return rows
-
-}catch(e){
-
-console.log("iframe nog niet klaar")
-return null
-
+    return [...new Set(karts)]
 }
 
+// 🔹 dropdown vullen
+async function fillKartDropdown() {
+    let select = document.getElementById("kartSelect")
+    if (!select) return
+
+    let karts = await getKarts()
+
+    select.innerHTML = ""
+
+    karts.forEach(k => {
+        let opt = document.createElement("option")
+        opt.value = k
+        opt.textContent = "Kart " + k
+        select.appendChild(opt)
+    })
 }
 
-function calcGap(a,b){
+// 🔹 helper: kart vinden
+function findKart(data, kartNumber) {
+    if (!data || !data.tracks) return null
 
-let toMs = t => {
-let parts = t.split(":")
-if(parts.length < 2) return 0
-return parseFloat(parts[0])*60 + parseFloat(parts[1])
+    for (let track of data.tracks) {
+        if (track.sessions) {
+            for (let session of track.sessions) {
+                if (session.drivers) {
+                    for (let d of session.drivers) {
+                        if (String(d.number) === String(kartNumber)) {
+                            return {
+                                driver: d,
+                                session: session
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return null
 }
 
-let gap = toMs(a) - toMs(b)
+// 🔹 QUALI DASHBOARD
+async function updateQuali(kartNumber) {
+    let data = await getData()
+    let found = findKart(data, kartNumber)
 
-return gap.toFixed(3)
+    if (!found) return
 
+    let myBest = found.driver.best || "-"
+    let fastest = "-"
+
+    // snelste tijd op baan zoeken
+    data.tracks.forEach(track => {
+        track.sessions?.forEach(s => {
+            s.drivers?.forEach(d => {
+                if (!fastest || d.best < fastest) {
+                    fastest = d.best
+                }
+            })
+        })
+    })
+
+    document.getElementById("myBest").textContent = myBest
+    document.getElementById("fastest").textContent = fastest
+}
+
+// 🔹 SPRINT / ENDURANCE BASIS
+async function updateRace(kartNumber) {
+    let data = await getData()
+    let found = findKart(data, kartNumber)
+
+    if (!found) return
+
+    let drivers = found.session.drivers
+
+    // sorteer op positie
+    drivers.sort((a, b) => a.position - b.position)
+
+    let index = drivers.findIndex(d => String(d.number) === String(kartNumber))
+
+    let me = drivers[index]
+    let front = drivers[index - 1]
+    let back = drivers[index + 1]
+
+    document.getElementById("position").textContent = me?.position || "-"
+    document.getElementById("front").textContent = front?.number || "-"
+    document.getElementById("back").textContent = back?.number || "-"
 }
