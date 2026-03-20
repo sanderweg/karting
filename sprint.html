@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Sprint</title>
-<script src="core.js"></script>
-
+<title>Sprint Dashboard</title>
+<script src="code.js"></script>
 <style>
-body{background:#000;color:white;text-align:center;font-family:Arial;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:20px;}
-.box{background:#1a1a1a;padding:25px;border-radius:10px;font-size:30px;}
-.big{font-size:70px;}
+body{background:#111;color:white;text-align:center;font-family:Arial;}
+.box{margin:15px;padding:20px;background:#222;border-radius:10px;font-size:28px;}
 </style>
 </head>
 
 <body>
 
-<h1>Sprint</h1>
+<h1>SPRINT</h1>
 
-<div class="grid">
-
-<div class="box big" id="pos">P--</div>
-<div class="box big" id="time">--</div>
-
-<div class="box" id="ahead">--</div>
-<div class="box" id="behind">--</div>
-
-</div>
+<div class="box">Positie: <span id="pos"></span></div>
+<div class="box">Voor: <span id="front"></span></div>
+<div class="box">Achter: <span id="behind"></span></div>
+<div class="box">Tijd: <span id="time"></span></div>
 
 <script>
-
 let kart = new URLSearchParams(window.location.search).get("kart")
 
 async function update(){
 
-let raw = await getData()
-if(!raw) return
+let rows = await getRows()
+if(!rows) return
 
-let data = parseData(raw)
-let race = getMyData(data, kart)
+let myIndex = -1
 
-if(!race) return
+rows.forEach((r,i)=>{
+    let k = r.children[1]?.innerText.trim()
+    if(k == kart) myIndex = i
+})
 
-pos.innerText = "P" + race.me.pos
-time.innerText = data.racetime + "s"
+if(myIndex === -1) return
 
-ahead.innerText = race.ahead
-? "Ahead: Kart " + race.ahead.kart
-: "Leader"
+let myRow = rows[myIndex]
+let front = rows[myIndex-1]
+let back = rows[myIndex+1]
 
-behind.innerText = race.behind
-? "Behind: Kart " + race.behind.kart
-: "Last"
+document.getElementById("pos").innerText = myIndex+1
+document.getElementById("front").innerText = front ? front.children[1].innerText : "-"
+document.getElementById("behind").innerText = back ? back.children[1].innerText : "-"
+document.getElementById("time").innerText = document.querySelector(".chrono")?.innerText || "-"
 
 }
 
 setInterval(update,2000)
-
 </script>
 
 </body>
