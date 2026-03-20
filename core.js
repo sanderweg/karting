@@ -1,5 +1,6 @@
-let API_URL = "https://karting.vercel.app/api/apex" // 👈 pas aan na deploy
+let API_URL = "https://https://karting-eight.vercel.app/api/apex"
 
+// 🔹 data ophalen
 async function getData() {
     try {
         let res = await fetch(API_URL)
@@ -8,14 +9,13 @@ async function getData() {
         console.log("DATA:", data)
 
         return data
-
     } catch (e) {
         console.error("Fetch error:", e)
         return null
     }
 }
 
-// 🔹 alle karts ophalen
+// 🔹 karts ophalen
 async function getKarts() {
     let data = await getData()
 
@@ -24,18 +24,16 @@ async function getKarts() {
     let karts = []
 
     data.tracks.forEach(track => {
-        if (track.sessions) {
-            track.sessions.forEach(session => {
-                if (session.drivers) {
-                    session.drivers.forEach(driver => {
-                        if (driver.number) {
-                            karts.push(driver.number)
-                        }
-                    })
+        track.sessions?.forEach(session => {
+            session.drivers?.forEach(driver => {
+                if (driver.number) {
+                    karts.push(driver.number)
                 }
             })
-        }
+        })
     })
+
+    console.log("KARTS:", karts)
 
     return [...new Set(karts)]
 }
@@ -43,9 +41,18 @@ async function getKarts() {
 // 🔹 dropdown vullen
 async function fillKartDropdown() {
     let select = document.getElementById("kartSelect")
-    if (!select) return
+
+    if (!select) {
+        console.log("❌ dropdown niet gevonden")
+        return
+    }
 
     let karts = await getKarts()
+
+    if (karts.length === 0) {
+        select.innerHTML = "<option>Geen karts gevonden</option>"
+        return
+    }
 
     select.innerHTML = ""
 
@@ -57,74 +64,14 @@ async function fillKartDropdown() {
     })
 }
 
-// 🔹 helper: kart vinden
-function findKart(data, kartNumber) {
-    if (!data || !data.tracks) return null
+// 🔹 navigatie
+function goToDashboard(type) {
+    let kart = document.getElementById("kartSelect").value
 
-    for (let track of data.tracks) {
-        if (track.sessions) {
-            for (let session of track.sessions) {
-                if (session.drivers) {
-                    for (let d of session.drivers) {
-                        if (String(d.number) === String(kartNumber)) {
-                            return {
-                                driver: d,
-                                session: session
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    if (!kart) {
+        alert("Selecteer eerst een kart")
+        return
     }
 
-    return null
-}
-
-// 🔹 QUALI DASHBOARD
-async function updateQuali(kartNumber) {
-    let data = await getData()
-    let found = findKart(data, kartNumber)
-
-    if (!found) return
-
-    let myBest = found.driver.best || "-"
-    let fastest = "-"
-
-    // snelste tijd op baan zoeken
-    data.tracks.forEach(track => {
-        track.sessions?.forEach(s => {
-            s.drivers?.forEach(d => {
-                if (!fastest || d.best < fastest) {
-                    fastest = d.best
-                }
-            })
-        })
-    })
-
-    document.getElementById("myBest").textContent = myBest
-    document.getElementById("fastest").textContent = fastest
-}
-
-// 🔹 SPRINT / ENDURANCE BASIS
-async function updateRace(kartNumber) {
-    let data = await getData()
-    let found = findKart(data, kartNumber)
-
-    if (!found) return
-
-    let drivers = found.session.drivers
-
-    // sorteer op positie
-    drivers.sort((a, b) => a.position - b.position)
-
-    let index = drivers.findIndex(d => String(d.number) === String(kartNumber))
-
-    let me = drivers[index]
-    let front = drivers[index - 1]
-    let back = drivers[index + 1]
-
-    document.getElementById("position").textContent = me?.position || "-"
-    document.getElementById("front").textContent = front?.number || "-"
-    document.getElementById("back").textContent = back?.number || "-"
+    window.location.href = type + ".html?kart=" + kart
 }
