@@ -1,44 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Quali</title>
-<script src="core.js"></script>
+<title>Quali Dashboard</title>
+
+<script src="code.js"></script>
 
 <style>
-body{background:#000;color:white;text-align:center;font-family:Arial;}
-.big{font-size:70px;margin:30px;}
-</style>
-</head>
+body{
+    font-family: Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+}
 
+.box{
+    margin:20px;
+    padding:20px;
+    background:#222;
+    border-radius:10px;
+    font-size:30px;
+}
+</style>
+
+</head>
 <body>
 
-<h1>Qualifying</h1>
+<h1>QUALI</h1>
 
-<div class="big" id="best">--</div>
-<div class="big" id="fastest">--</div>
-<div class="big" id="gap">--</div>
+<div class="box">Mijn snelste: <span id="myBest">-</span></div>
+<div class="box">Snelste baan: <span id="best">-</span></div>
+<div class="box">Gap: <span id="gap">-</span></div>
 
 <script>
-
 let kart = new URLSearchParams(window.location.search).get("kart")
 
 async function update(){
 
-let raw = await getData()
-if(!raw) return
+let rows = await getRows()
 
-let data = parseData(raw)
+if(!rows) return
 
-// ⚠️ placeholder (best lap parsing komt later)
-best.innerText = "My Best: ..."
-fastest.innerText = "Fastest: ..."
-gap.innerText = "Gap: ..."
+let myTime = null
+let bestTime = null
+
+rows.forEach(r => {
+
+let pos = r.children
+
+let kartNr = pos[1]?.innerText.trim()
+let time = pos[3]?.innerText.trim()
+
+if(!time || time === "-") return
+
+if(!bestTime) bestTime = time
+
+if(kartNr == kart){
+    myTime = time
+}
+
+})
+
+document.getElementById("myBest").innerText = myTime || "-"
+document.getElementById("best").innerText = bestTime || "-"
+
+if(myTime && bestTime){
+    document.getElementById("gap").innerText = calcGap(myTime, bestTime)
+}
 
 }
 
-setInterval(update,2000)
-
+setInterval(update, 2000)
 </script>
 
 </body>
