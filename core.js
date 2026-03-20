@@ -7,13 +7,13 @@ let target = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/commonv2
 + "?init=" + init
 + "&index=" + index
 
-// 🔥 CORS FIX
-let url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(target)
+// 🔥 NIEUWE PROXY (werkt beter)
+let url = "https://corsproxy.io/?" + encodeURIComponent(target)
 
 let res = await fetch(url)
 let text = await res.text()
 
-console.log("RAW:", text) // 👈 DEBUG
+console.log("RAW:", text)
 
 if(!text.includes("@")) return null
 
