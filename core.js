@@ -1,27 +1,51 @@
-let init = 0
-let index = 0
+let iframe
 
-async function getData(){
+function createFrame(){
 
-let target = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/commonv2/functions/live_ajax.php"
-+ "?init=" + init
-+ "&index=" + index
+if(document.getElementById("apexFrame")) return
 
-// 🔥 NIEUWE PROXY (werkt beter)
-let url = "https://corsproxy.io/?" + encodeURIComponent(target)
+iframe = document.createElement("iframe")
+iframe.id = "apexFrame"
+iframe.src = "https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"
+iframe.style.display = "none"
 
-let res = await fetch(url)
-let text = await res.text()
+document.body.appendChild(iframe)
 
-console.log("RAW:", text)
+}
 
-if(!text.includes("@")) return null
+async function getRows(){
 
-let parts = text.split("@")
+createFrame()
 
-init = parts[0]
-index = parts[1]
+try{
 
-return parts[2]
+let doc = iframe.contentDocument || iframe.contentWindow.document
+
+let rows = doc.querySelectorAll("table tbody tr")
+
+if(rows.length === 0) return null
+
+return rows
+
+}catch(e){
+
+console.log("iframe nog niet klaar")
+return null
+
+}
+
+}
+
+function calcGap(a,b){
+
+let toMs = t => {
+let parts = t.split(":")
+if(parts.length < 2) return 0
+return parseFloat(parts[0])*60 + parseFloat(parts[1])
+}
+
+let gap = toMs(a) - toMs(b)
+
+return gap.toFixed(3)
 
 }
