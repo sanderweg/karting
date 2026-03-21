@@ -1,26 +1,28 @@
-export default async function handler(req, res) {
+<script src="core.js"></script>
 
-  try {
+<select id="kartSelect"></select>
 
-    let init = req.query.init || 0
-    let index = req.query.index || 0
+<script>
+async function loadKarts() {
 
-    let url = `https://www.apex-timing.com/live-timing/kartbaanoldenzaal/commonv2/functions/live_ajax.php?init=${init}&index=${index}`
+  let raw = await getData()
+  let rows = getRows(raw)
 
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
-    })
+  let select = document.getElementById("kartSelect")
+  select.innerHTML = ""
 
-    const text = await response.text()
-
-    // CORS fix
-    res.setHeader("Access-Control-Allow-Origin", "*")
-
-    res.status(200).send(text)
-
-  } catch (e) {
-    res.status(500).json({ error: e.toString() })
+  if (rows.length === 0) {
+    select.innerHTML = "<option>Geen karts gevonden</option>"
+    return
   }
+
+  rows.forEach(r => {
+    let opt = document.createElement("option")
+    opt.value = r.kart
+    opt.text = "Kart " + r.kart + " (" + r.name + ")"
+    select.appendChild(opt)
+  })
 }
+
+loadKarts()
+</script>
