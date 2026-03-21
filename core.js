@@ -1,77 +1,50 @@
-let API_URL = "https://https://karting-eight.vercel.app/api/apex"
+let init = 0
+let index = 0
 
-// 🔹 data ophalen
 async function getData() {
-    try {
-        let res = await fetch(API_URL)
-        let data = await res.json()
 
-        console.log("DATA:", data)
+  let url = `/api/apex?init=${init}&index=${index}`
 
-        return data
-    } catch (e) {
-        console.error("Fetch error:", e)
-        return null
-    }
+  let res = await fetch(url)
+  let text = await res.text()
+
+  console.log("RAW:", text)
+
+  if (!text.includes("@")) return null
+
+  let parts = text.split("@")
+
+  init = parts[0]
+  index = parts[1]
+
+  return parts[2]
 }
 
-// 🔹 karts ophalen
-async function getKarts() {
-    let data = await getData()
+// 🔥 PARSER (simpel maar werkt)
+function getRows(raw) {
 
-    if (!data || !data.tracks) return []
+  let rows = []
 
-    let karts = []
+  if (!raw) return rows
 
-    data.tracks.forEach(track => {
-        track.sessions?.forEach(session => {
-            session.drivers?.forEach(driver => {
-                if (driver.number) {
-                    karts.push(driver.number)
-                }
-            })
-        })
-    })
+  let parts = raw.split("$")
 
-    console.log("KARTS:", karts)
+  for (let p of parts) {
 
-    return [...new Set(karts)]
-}
+    if (p.includes("|")) {
 
-// 🔹 dropdown vullen
-async function fillKartDropdown() {
-    let select = document.getElementById("kartSelect")
+      let cols = p.split("|")
 
-    if (!select) {
-        console.log("❌ dropdown niet gevonden")
-        return
+      rows.push({
+        pos: cols[0],
+        kart: cols[1],
+        name: cols[2],
+        last: cols[3],
+        best: cols[4],
+        gap: cols[5] || "0"
+      })
     }
+  }
 
-    let karts = await getKarts()
-
-    if (karts.length === 0) {
-        select.innerHTML = "<option>Geen karts gevonden</option>"
-        return
-    }
-
-    select.innerHTML = ""
-
-    karts.forEach(k => {
-        let opt = document.createElement("option")
-        opt.value = k
-        opt.textContent = "Kart " + k
-        select.appendChild(opt)
-    })
-}
-
-// 🔹 navigatie
-function goToDashboard(type) {
-    let kart = document.getElementById("kartSelect").value
-
-    if (!kart) {
-        alert("Selecteer eerst een kart")
-        return
-    }
-
-    window.location.href = type + ".html?kart=" + kart
+  return rows
 }
