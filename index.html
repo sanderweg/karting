@@ -97,9 +97,36 @@
     </section>
 
     <section class="info">
-      <strong>Gebruik:</strong> open op de telefoon gewoon de pagina. Voor de pitmuur open je dezelfde pagina met <code>?pit=1</code>.
-      Vul daarna je Firebase-config in bovenin elk HTML-bestand bij <code>FIREBASE_CONFIG</code> en kies per sessie dezelfde <code>room</code> in de URL, bijvoorbeeld <code>?pit=1&amp;room=teamA</code> op de pitwall en <code>?room=teamA</code> op de driver-telefoon.
+      <strong>Snel starten:</strong> kies hieronder je room en open daarna direct de juiste view.
+      Je hoeft dus niet meer handmatig <code>?pit=1</code> in te typen.
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
+        <input id="roomInput" placeholder="bijv. teamA" style="background:#0b1320;border:1px solid var(--line);color:var(--text);border-radius:14px;padding:12px 14px;font-size:15px;min-width:220px" />
+        <button id="openDriverBtn" style="border:none;border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:var(--accent);color:white">Open driver view</button>
+        <button id="openPitBtn" style="border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:#111a28;color:#dce6f5">Open pitwall</button>
+      </div>
+      <div style="margin-top:12px">Vul daarna je Firebase-config in bovenin elk HTML-bestand bij <code>FIREBASE_CONFIG</code>. Gebruik op beide apparaten dezelfde <code>room</code>.</div>
     </section>
   </main>
+  <script>
+    const roomInput = document.getElementById('roomInput');
+    const params = new URLSearchParams(location.search);
+    roomInput.value = params.get('room') || 'teamA';
+    function openMode(page, pit){
+      const room = (roomInput.value || 'teamA').trim();
+      const url = new URL(page, location.href);
+      url.searchParams.set('room', room);
+      if (pit) url.searchParams.set('pit', '1');
+      location.href = url.toString();
+    }
+    document.querySelectorAll('.card').forEach(card => {
+      const href = card.getAttribute('href');
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        openMode(href, false);
+      });
+    });
+    document.getElementById('openDriverBtn').addEventListener('click', ()=>openMode('quali.html', false));
+    document.getElementById('openPitBtn').addEventListener('click', ()=>openMode('quali.html', true));
+  </script>
 </body>
 </html>

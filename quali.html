@@ -75,6 +75,7 @@
       </div>
       <div class="meta">
         <div class="chip" id="roomChip">room: default</div>
+        <button class="ghost" id="modeToggleBtn" type="button">Open pitwall</button>
         <div class="chip" id="modeChip">driver mode</div>
       </div>
     </header>
@@ -186,7 +187,8 @@
       notesInput: document.getElementById('notesInput'),
       saveBtn: document.getElementById('saveBtn'),
       resetBtn: document.getElementById('resetBtn'),
-      copyDriverLinkBtn: document.getElementById('copyDriverLinkBtn')
+      copyDriverLinkBtn: document.getElementById('copyDriverLinkBtn'),
+      modeToggleBtn: document.getElementById('modeToggleBtn')
     };
 
     function scoreClass(value){
@@ -248,6 +250,21 @@
     applyState(readLocal());
     window.addEventListener('storage', (e) => { if (e.key === storageKey) applyState(readLocal()); });
 
+
+    function buildModeUrl(forcePit, targetRoom = room){
+      const url = new URL(location.href);
+      url.searchParams.set('room', (targetRoom || 'default').trim());
+      if (forcePit) url.searchParams.set('pit', '1');
+      else url.searchParams.delete('pit');
+      return url.toString();
+    }
+
+    ui.modeToggleBtn.textContent = isPit ? 'Open driver view' : 'Open pitwall';
+    ui.modeToggleBtn.addEventListener('click', () => {
+      const targetRoom = isPit ? room : ((ui.roomInput && ui.roomInput.value) || room || 'default');
+      location.href = buildModeUrl(!isPit, targetRoom);
+    });
+
     function collectState(){
       return {
         driverName: ui.driverName.value || 'Driver',
@@ -264,10 +281,7 @@
       ui.saveBtn.addEventListener('click', async () => {
         const requestedRoom = (ui.roomInput.value || 'default').trim();
         if (requestedRoom !== room) {
-          const url = new URL(location.href);
-          url.searchParams.set('room', requestedRoom);
-          url.searchParams.set('pit', '1');
-          location.href = url.toString();
+          location.href = buildModeUrl(true, requestedRoom);
           return;
         }
         const next = collectState();
@@ -284,10 +298,7 @@
 
       ui.copyDriverLinkBtn.addEventListener('click', async () => {
         const targetRoom = (ui.roomInput.value || room || 'default').trim();
-        const url = new URL(location.href);
-        url.searchParams.delete('pit');
-        url.searchParams.set('room', targetRoom);
-        await navigator.clipboard.writeText(url.toString());
+        await navigator.clipboard.writeText(buildModeUrl(false, targetRoom));
         ui.copyDriverLinkBtn.textContent = 'Driver link gekopieerd';
         setTimeout(() => ui.copyDriverLinkBtn.textContent = 'Kopieer driver link', 1800);
       });
