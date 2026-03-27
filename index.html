@@ -1,20 +1,155 @@
-<iframe 
-  id="apexFrame"
-  src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"
-  style="width:100%; height:500px;">
-</iframe>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karting Dashboard V4</title>
+  <style>
+    :root{
+      --bg:#050505;
+      --card:#101010;
+      --card2:#161616;
+      --text:#ffffff;
+      --muted:#b8b8b8;
+      --accent:#2d19ff;
+      --green:#39ff52;
+      --red:#ff4747;
+      --yellow:#ffd54a;
+      --border:#2b2b2b;
+    }
 
-<script>
-setTimeout(() => {
-  try {
-    let frame = document.getElementById("apexFrame")
+    *{box-sizing:border-box}
 
-    let doc = frame.contentWindow.document
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#050505 0%, #0d0d0d 100%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-    console.log("DOC:", doc)
+    .wrap{
+      width:min(1100px,100%);
+    }
 
-  } catch(e) {
-    console.log("❌ Cross-origin block")
-  }
-}, 3000)
-</script>
+    .hero{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .hero h1{
+      margin:0 0 10px 0;
+      font-size:44px;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card2),var(--card));
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:24px;
+      cursor:pointer;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      text-decoration:none;
+      color:var(--text);
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+    }
+
+    .card:hover{
+      transform:translateY(-4px);
+      border-color:#4f44ff;
+      box-shadow:0 18px 36px rgba(0,0,0,.45);
+    }
+
+    .emoji{
+      font-size:40px;
+      margin-bottom:12px;
+    }
+
+    .title{
+      font-size:28px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .desc{
+      color:var(--muted);
+      line-height:1.45;
+      min-height:48px;
+    }
+
+    .footer{
+      margin-top:24px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .note{
+      margin-top:20px;
+      background:#111;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px 18px;
+      color:#d5d5d5;
+      line-height:1.45;
+    }
+
+    @media (max-width:700px){
+      .hero h1{font-size:34px}
+      .hero p{font-size:16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Karting Dashboard V4</h1>
+      <p>Kies je dashboard voor quali, sprint of endurance.</p>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="quali.html">
+        <div class="emoji">🏁</div>
+        <div class="title">Quali</div>
+        <div class="desc">Mijn snelste tijd, snelste tijd op de baan en het verschil daartussen.</div>
+      </a>
+
+      <a class="card" href="sprint.html">
+        <div class="emoji">🏎️</div>
+        <div class="title">Sprint</div>
+        <div class="desc">Positie, voorganger, achterligger en resterende tijd in een snelle overlay.</div>
+      </a>
+
+      <a class="card" href="endurance.html">
+        <div class="emoji">⛽</div>
+        <div class="title">Endurance</div>
+        <div class="desc">Sprint-info plus pitstops voor en achter, met grote race-engineer stijl.</div>
+      </a>
+    </div>
+
+    <div class="note">
+      Deze V4 werkt als overlay bovenop de live Apex-pagina. Omdat Apex cross-origin toegang blokkeert, vul je de race-info snel handmatig bij met de knoppen in het dashboard.
+    </div>
+
+    <div class="footer">
+      Gemaakt voor gebruik op telefoon, tablet of laptop.
+    </div>
+  </div>
+</body>
+</html>
