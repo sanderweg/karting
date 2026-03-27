@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Race Control Dashboard</title>
+  <title>Race Dashboard Hub</title>
   <style>
     :root{
-      --bg:#070b12;
-      --panel:#101722;
-      --panel-2:#151e2c;
-      --line:#243043;
-      --text:#f4f7fb;
-      --muted:#8e9ab0;
-      --accent:#3b82f6;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
+      --bg:#060816;
+      --panel:#11162a;
+      --panel-2:#171d35;
+      --text:#f5f7ff;
+      --muted:#9aa3bd;
+      --line:rgba(255,255,255,.09);
+      --accent:#6ea8ff;
+      --accent-2:#66ffd1;
+      --shadow:0 24px 60px rgba(0,0,0,.45);
       --radius:24px;
-      --shadow:0 20px 60px rgba(0,0,0,.45);
     }
     *{box-sizing:border-box}
     body{
@@ -26,107 +24,200 @@
       font-family:Inter,Arial,Helvetica,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top, rgba(59,130,246,.16), transparent 35%),
-        linear-gradient(180deg,#05080e 0%, #0a111a 100%);
-      padding:24px;
+        radial-gradient(circle at top left, rgba(110,168,255,.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(102,255,209,.10), transparent 25%),
+        linear-gradient(180deg, #070b18 0%, #05070f 100%);
       display:flex;
       align-items:center;
       justify-content:center;
+      padding:20px;
     }
-    .shell{width:min(1180px,100%)}
-    .hero{margin-bottom:22px}
+    .app{width:min(1120px,100%)}
+    .hero{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:32px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      margin-bottom:20px;
+    }
     .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid var(--line);padding:8px 12px;border-radius:999px;
-      color:#c7d2e4;background:rgba(255,255,255,.03);font-size:13px;
-      letter-spacing:.08em;text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-    h1{margin:16px 0 10px;font-size:clamp(34px,5vw,58px);line-height:1.02}
-    .sub{max-width:760px;color:var(--muted);font-size:18px;line-height:1.55}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:28px}
+    h1{font-size:clamp(32px,6vw,56px);margin:18px 0 10px}
+    .lead{max-width:720px;color:var(--muted);font-size:18px;line-height:1.5}
+    .setup{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      margin-top:22px;
+    }
+    .panel{
+      background:linear-gradient(180deg, var(--panel-2), var(--panel));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+    }
+    .label{font-size:13px;color:var(--muted);margin-bottom:8px;display:block}
+    input, select{
+      width:100%;
+      border:1px solid var(--line);
+      background:#0a1020;
+      color:var(--text);
+      padding:16px 16px;
+      font-size:16px;
+      border-radius:16px;
+      outline:none;
+    }
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .hint{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    button, .button{
+      appearance:none;border:none;cursor:pointer;text-decoration:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      border-radius:16px;padding:14px 18px;font-size:15px;font-weight:700;
+      transition:transform .16s ease, opacity .16s ease, border-color .16s ease;
+    }
+    button:hover,.button:hover{transform:translateY(-1px)}
+    .primary{background:linear-gradient(135deg,var(--accent),#90b9ff);color:#07101f}
+    .secondary{background:#0b1222;color:var(--text);border:1px solid var(--line)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .card{
-      text-decoration:none;color:inherit;background:linear-gradient(180deg,var(--panel-2),var(--panel));
-      border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      background:linear-gradient(180deg, var(--panel-2), var(--panel));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:var(--shadow);
     }
-    .card:hover{transform:translateY(-6px);border-color:rgba(59,130,246,.7)}
-    .icon{font-size:34px;margin-bottom:16px}
-    .title{font-size:26px;font-weight:800;margin-bottom:10px}
-    .desc{color:var(--muted);line-height:1.5;min-height:72px}
-    .links{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-    .pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:8px 10px;color:#d4def0;background:rgba(255,255,255,.03)}
-    .info{
-      margin-top:24px;background:rgba(255,255,255,.03);border:1px solid var(--line);
-      border-radius:20px;padding:18px 20px;color:#b7c2d5;line-height:1.6
+    .card h3{margin:14px 0 8px;font-size:24px}
+    .card p{margin:0;color:var(--muted);line-height:1.5;min-height:66px}
+    .icon{
+      width:52px;height:52px;border-radius:16px;
+      display:grid;place-items:center;font-size:24px;
+      background:rgba(110,168,255,.12);border:1px solid var(--line)
     }
-    code{background:rgba(255,255,255,.06);padding:2px 7px;border-radius:8px}
+    .cardActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+    .mini{font-size:13px;padding:12px 14px}
+    .footer{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:900px){
+      .setup,.cards{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-  <main class="shell">
+  <div class="app">
     <section class="hero">
-      <div class="eyebrow">Race Control • Driver &amp; Pitwall</div>
-      <h1>Algemeen race dashboard voor telefoon op het stuur.</h1>
-      <p class="sub">
-        Deze versie is niet meer baan-specifiek. De driver krijgt een rustige, grote en duidelijke view.
-        De pitwall gebruikt precies dezelfde pagina, maar dan in beheerstand met <code>?pit=1</code>.
-      </p>
-    </section>
+      <div class="eyebrow">Driver + Pitwall Dashboard</div>
+      <h1>Professioneel race dashboard voor telefoon en pitmuur</h1>
+      <p class="lead">De driver hoeft niets te doen. De pitwall voert info in en de telefoon op het stuur toont direct grote, duidelijke data. Vul hieronder alleen je teamnaam in en kies daarna de juiste view.</p>
 
-    <section class="grid">
-      <a class="card" href="quali.html">
-        <div class="icon">⏱️</div>
-        <div class="title">Qualifying</div>
-        <div class="desc">Beste ronde, target gap, track best en engineer status in een compacte driver-view.</div>
-        <div class="links"><span class="pill">driver</span><span class="pill">pitwall via ?pit=1</span></div>
-      </a>
+      <div class="setup">
+        <div class="panel">
+          <label class="label" for="room">Team / room naam</label>
+          <input id="room" value="team-a" placeholder="bijvoorbeeld team-a" />
 
-      <a class="card" href="sprint.html">
-        <div class="icon">🏎️</div>
-        <div class="title">Sprint</div>
-        <div class="desc">Positie, gaps, remaining laps, push/hold call en een heldere race status voor directe feedback.</div>
-        <div class="links"><span class="pill">driver</span><span class="pill">pitwall via ?pit=1</span></div>
-      </a>
+          <div class="row" style="margin-top:12px;">
+            <div>
+              <label class="label" for="mode">Standaard view</label>
+              <select id="mode">
+                <option value="driver">Driver view</option>
+                <option value="pit">Pitwall view</option>
+              </select>
+            </div>
+            <div>
+              <label class="label" for="device">Aanbevolen apparaat</label>
+              <select id="device">
+                <option>Telefoon op stuur</option>
+                <option>Laptop / tablet pitwall</option>
+              </select>
+            </div>
+          </div>
 
-      <a class="card" href="endurance.html">
-        <div class="icon">⛽</div>
-        <div class="title">Endurance</div>
-        <div class="desc">Stint management, pit window, fuel, swap call en traffic updates in een professionele layout.</div>
-        <div class="links"><span class="pill">driver</span><span class="pill">pitwall via ?pit=1</span></div>
-      </a>
-    </section>
+          <div class="actions">
+            <button class="primary" onclick="openDashboard('quali')">Open Quali</button>
+            <button class="secondary" onclick="openDashboard('sprint')">Open Sprint</button>
+            <button class="secondary" onclick="openDashboard('endurance')">Open Endurance</button>
+          </div>
 
-    <section class="info">
-      <strong>Snel starten:</strong> kies hieronder je room en open daarna direct de juiste view.
-      Je hoeft dus niet meer handmatig <code>?pit=1</code> in te typen.
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
-        <input id="roomInput" placeholder="bijv. teamA" style="background:#0b1320;border:1px solid var(--line);color:var(--text);border-radius:14px;padding:12px 14px;font-size:15px;min-width:220px" />
-        <button id="openDriverBtn" style="border:none;border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:var(--accent);color:white">Open driver view</button>
-        <button id="openPitBtn" style="border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:#111a28;color:#dce6f5">Open pitwall</button>
+          <div class="hint">Gebruik op beide apparaten exact dezelfde roomnaam. Voor live sync hoef je daarna alleen nog <strong>firebase-config.js</strong> één keer in te vullen.</div>
+        </div>
+
+        <div class="panel">
+          <div class="label">Snelle uitleg</div>
+          <div style="font-size:22px;font-weight:700;margin-bottom:10px">Zo werkt het</div>
+          <div style="display:grid;gap:12px;color:var(--muted);line-height:1.5">
+            <div><strong style="color:var(--text)">1.</strong> Open de driver view op de telefoon.</div>
+            <div><strong style="color:var(--text)">2.</strong> Open de pitwall view op de laptop of tablet.</div>
+            <div><strong style="color:var(--text)">3.</strong> Pitwall drukt op knoppen zoals PUSH, BOX of update de velden.</div>
+            <div><strong style="color:var(--text)">4.</strong> Driver ziet alles direct groot in beeld.</div>
+          </div>
+        </div>
       </div>
-      <div style="margin-top:12px">Vul daarna je Firebase-config in bovenin elk HTML-bestand bij <code>FIREBASE_CONFIG</code>. Gebruik op beide apparaten dezelfde <code>room</code>.</div>
     </section>
-  </main>
+
+    <section class="cards">
+      <article class="card">
+        <div class="icon">⏱️</div>
+        <h3>Quali</h3>
+        <p>Focus op beste ronde, snelste baanronde en het gat. Rustig, helder en perfect voor één snelle opdracht tegelijk.</p>
+        <div class="cardActions">
+          <a class="button primary mini" href="#" onclick="return navTo('quali','driver')">Driver</a>
+          <a class="button secondary mini" href="#" onclick="return navTo('quali','pit')">Pitwall</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="icon">🏎️</div>
+        <h3>Sprint</h3>
+        <p>Positie, targets voor en achter, race status en resterende tijd. Met snelle engineer-knoppen voor duidelijke calls.</p>
+        <div class="cardActions">
+          <a class="button primary mini" href="#" onclick="return navTo('sprint','driver')">Driver</a>
+          <a class="button secondary mini" href="#" onclick="return navTo('sprint','pit')">Pitwall</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="icon">⛽</div>
+        <h3>Endurance</h3>
+        <p>Alles voor langere runs: stint, fuel/stop strategie, laatste call en duidelijke communicatie van pitmuur naar coureur.</p>
+        <div class="cardActions">
+          <a class="button primary mini" href="#" onclick="return navTo('endurance','driver')">Driver</a>
+          <a class="button secondary mini" href="#" onclick="return navTo('endurance','pit')">Pitwall</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer">Tip: publiceer alle bestanden samen op GitHub Pages in dezelfde map.</div>
+  </div>
+
   <script>
-    const roomInput = document.getElementById('roomInput');
-    const params = new URLSearchParams(location.search);
-    roomInput.value = params.get('room') || 'teamA';
-    function openMode(page, pit){
-      const room = (roomInput.value || 'teamA').trim();
-      const url = new URL(page, location.href);
-      url.searchParams.set('room', room);
-      if (pit) url.searchParams.set('pit', '1');
-      location.href = url.toString();
+    function cleanRoom(value){
+      return (value || 'team-a').trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
     }
-    document.querySelectorAll('.card').forEach(card => {
-      const href = card.getAttribute('href');
-      card.addEventListener('click', (e) => {
-        e.preventDefault();
-        openMode(href, false);
-      });
-    });
-    document.getElementById('openDriverBtn').addEventListener('click', ()=>openMode('quali.html', false));
-    document.getElementById('openPitBtn').addEventListener('click', ()=>openMode('quali.html', true));
+    function makeUrl(page, mode){
+      const room = cleanRoom(document.getElementById('room').value);
+      const params = new URLSearchParams({ room });
+      if(mode === 'pit') params.set('pit','1');
+      return `${page}.html?${params.toString()}`;
+    }
+    function navTo(page, mode){
+      window.location.href = makeUrl(page, mode);
+      return false;
+    }
+    function openDashboard(page){
+      const mode = document.getElementById('mode').value === 'pit' ? 'pit' : 'driver';
+      window.location.href = makeUrl(page, mode);
+    }
   </script>
 </body>
 </html>

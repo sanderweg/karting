@@ -3,306 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Race Control • Qualifying</title>
+  <title>Quali Dashboard</title>
   <style>
-    :root{
-      --bg:#071019;
-      --panel:#101a28;
-      --panel-2:#162234;
-      --line:#233249;
-      --text:#f5f7fb;
-      --muted:#94a3b8;
-      --accent:#3b82f6;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --radius:26px;
-      --shadow:0 20px 55px rgba(0,0,0,.45);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);
-      background:radial-gradient(circle at top, rgba(59,130,246,.16), transparent 33%), linear-gradient(180deg,#05080d,#0b131d);
-      min-height:100vh;
-    }
-    .layout{display:grid;grid-template-columns:1fr;gap:16px;padding:16px;min-height:100vh}
-    .topbar,.card,.panel{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .topbar{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .brand{display:flex;flex-direction:column;gap:6px}
-    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#c6d2e3}
-    .title{font-size:clamp(28px,6vw,52px);font-weight:900;line-height:1}
-    .meta{display:flex;gap:10px;flex-wrap:wrap}
-    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:13px;color:#d6def0}
-    .main{display:grid;grid-template-columns:1fr;gap:16px}
-    .hero{padding:20px}
-    .heroGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .metric{padding:18px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
-    .metricLabel{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-    .metricValue{font-size:clamp(34px,9vw,68px);font-weight:900;line-height:1.02}
-    .metricValue.small{font-size:clamp(26px,6vw,42px)}
-    .bottom{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-    .card{padding:18px}
-    .card h2{margin:0 0 14px 0;font-size:16px;color:#d9e3f2;letter-spacing:.06em;text-transform:uppercase}
-    .statusBox{display:flex;align-items:center;justify-content:center;min-height:128px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:clamp(26px,6vw,46px);font-weight:900;text-align:center;padding:16px}
-    .notes{font-size:clamp(20px,4vw,28px);line-height:1.35;color:#eef3fb;min-height:92px;white-space:pre-wrap}
-    .panel{padding:18px;display:none}
-    body.pit .panel{display:block}
-    .panelGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .field{display:flex;flex-direction:column;gap:8px}
-    .field.full{grid-column:1 / -1}
-    label{font-size:13px;color:var(--muted)}
-    input,select,textarea{
-      width:100%;background:#0b1320;border:1px solid var(--line);color:var(--text);
-      border-radius:16px;padding:14px 14px;font-size:16px;font-family:inherit
-    }
-    textarea{min-height:100px;resize:vertical}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    button{border:none;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:700;cursor:pointer}
-    .primary{background:var(--accent);color:white}
-    .ghost{background:#111a28;color:#dce6f5;border:1px solid var(--line)}
-    .good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
-    .footerHint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.55}
-    @media (max-width:900px){.bottom{grid-template-columns:1fr}.heroGrid{grid-template-columns:1fr 1fr}}
-    @media (max-width:640px){.layout{padding:10px}.topbar,.card,.panel,.hero{border-radius:22px}.heroGrid{grid-template-columns:1fr}.panelGrid{grid-template-columns:1fr}.title{font-size:30px}.metricValue{font-size:42px}.notes{font-size:22px}}
+    :root{--panel:#0d1324;--panel2:#141b31;--line:rgba(255,255,255,.08);--text:#f6f8ff;--muted:#95a0bf;--accent:#77a8ff;--good:#67ffb3;--warn:#ffd166;--bad:#ff6b81;--shadow:0 20px 60px rgba(0,0,0,.45)}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(119,168,255,.16), transparent 28%),linear-gradient(180deg,#070b18 0%,#05070f 100%)}
+    .shell{max-width:1200px;margin:0 auto;padding:16px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;padding:14px 16px;border:1px solid var(--line);background:rgba(10,15,30,.82);backdrop-filter:blur(10px);border-radius:20px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:20}.brand h1{margin:0;font-size:26px}.brand p{margin:6px 0 0;color:var(--muted);font-size:13px}.meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#0b1020;color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow)}.driverCard{padding:20px;min-height:calc(100vh - 140px);display:flex;flex-direction:column;justify-content:space-between}.sectionTitle{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.heroValue{font-size:clamp(34px,9vw,82px);font-weight:800;line-height:.95;margin:12px 0 0;letter-spacing:-.04em}.heroLabel{font-size:18px;color:var(--muted);margin-top:10px}.statusBar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)}.statusMain{font-size:clamp(28px,7vw,54px);font-weight:800;line-height:1}.statusSub{color:var(--muted);font-size:14px;margin-top:6px}.statusFlag{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;color:var(--muted);min-width:110px;text-align:center}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.metric{padding:16px;border-radius:22px;background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid var(--line)}.metric .label{font-size:13px;color:var(--muted);margin-bottom:10px}.metric .value{font-size:clamp(24px,5vw,42px);font-weight:750;line-height:1.05}.metric .sub{margin-top:8px;color:var(--muted);font-size:12px}.pitCard{padding:18px;display:flex;flex-direction:column;gap:14px}.pitHeader{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.pitHeader h2{margin:0;font-size:24px}.pitHeader p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+    .switches{display:flex;flex-wrap:wrap;gap:8px} button,.linkBtn{appearance:none;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:15px;padding:12px 14px;font-size:14px;font-weight:700}.primary{background:linear-gradient(135deg,var(--accent),#9cc4ff);color:#081221}.secondary{background:#0a1120;color:var(--text);border:1px solid var(--line)}.danger{background:rgba(255,107,129,.12);color:#ffd6de;border:1px solid rgba(255,107,129,.28)}
+    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:13px;color:var(--muted)}.field input,.field textarea{width:100%;background:#09101d;color:var(--text);border:1px solid var(--line);border-radius:16px;padding:14px;font-size:16px;font-family:inherit}.field textarea{min-height:92px;resize:vertical}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quick button{min-height:48px;background:#0a1120;color:var(--text);border:1px solid var(--line)}.footerNote{color:var(--muted);font-size:12px;line-height:1.5}.hidePit .pitCol{display:none}.hidePit .layout{grid-template-columns:1fr}.hidePit .driverCard{min-height:calc(100vh - 95px)}.green{color:var(--good)!important}.yellow{color:var(--warn)!important}.red{color:var(--bad)!important}
+    @media (max-width:900px){.layout,.formGrid{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}.topbar{align-items:flex-start;flex-direction:column}.meta{justify-content:flex-start}}
   </style>
 </head>
 <body>
-  <div class="layout">
-    <header class="topbar">
-      <div class="brand">
-        <div class="eyebrow">Race Control • Qualifying</div>
-        <div class="title">QUALI</div>
-      </div>
-      <div class="meta">
-        <div class="chip" id="roomChip">room: default</div>
-        <button class="ghost" id="modeToggleBtn" type="button">Open pitwall</button>
-        <div class="chip" id="modeChip">driver mode</div>
-      </div>
-    </header>
-
-    <main class="main">
-      <section class="hero card">
-        <div class="heroGrid">
-          <div class="metric">
-            <div class="metricLabel">Best lap</div>
-            <div class="metricValue" id="bestLap">--.---</div>
-          </div>
-          <div class="metric">
-            <div class="metricLabel">Gap to target</div>
-            <div class="metricValue" id="gapTarget">+0.000</div>
-          </div>
-          <div class="metric">
-            <div class="metricLabel">Track best</div>
-            <div class="metricValue small" id="trackBest">--.---</div>
-          </div>
-          <div class="metric">
-            <div class="metricLabel">Current call</div>
-            <div class="metricValue small" id="callText">BUILD</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="bottom">
-        <section class="card">
-          <h2>Engineer message</h2>
-          <div class="statusBox" id="statusText">READY FOR PUSH</div>
-        </section>
-        <section class="card">
-          <h2>Focus</h2>
-          <div class="notes" id="notes">Warm tyres. Build the lap. Minimum steering input.</div>
-        </section>
-      </section>
-
-      <aside class="panel">
-        <h2 style="margin:0 0 14px 0;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:#d9e3f2">Pitwall control</h2>
-        <div class="panelGrid">
-          <div class="field"><label>Room</label><input id="roomInput" placeholder="bijv. teamA"></div>
-          <div class="field"><label>Driver / kart</label><input id="driverName" placeholder="bijv. Kart 12"></div>
-          <div class="field"><label>Best lap</label><input id="bestLapInput" placeholder="52.381"></div>
-          <div class="field"><label>Track best</label><input id="trackBestInput" placeholder="51.992"></div>
-          <div class="field"><label>Gap to target</label><input id="gapTargetInput" placeholder="+0.389"></div>
-          <div class="field"><label>Current call</label>
-            <select id="callTextInput"><option>PUSH</option><option>BUILD</option><option>COOL</option><option>ABORT</option></select>
-          </div>
-          <div class="field"><label>Status</label>
-            <select id="statusInput"><option>READY FOR PUSH</option><option>PUSH THIS LAP</option><option>BUILD GAP</option><option>COOL TYRES</option><option>ABORT LAP</option></select>
-          </div>
-          <div class="field full"><label>Focus / notes</label><textarea id="notesInput" placeholder="Korte instructie voor de driver"></textarea></div>
-        </div>
-        <div class="actions">
-          <button class="primary" id="saveBtn">Opslaan / live push</button>
-          <button class="ghost" id="resetBtn">Reset</button>
-          <button class="ghost" id="copyDriverLinkBtn">Kopieer driver link</button>
-        </div>
-        <div class="footerHint">Firebase live sync werkt zodra je je eigen config invult in <strong>FIREBASE_CONFIG</strong>. Zonder Firebase gebruikt de pagina alleen lokale fallback voor testen op hetzelfde apparaat.</div>
-      </aside>
-    </main>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand"><h1>Quali</h1><p id="modeText">Driver view · grote leesbare data voor telefoon op stuur</p></div>
+      <div class="meta"><div class="pill" id="roomTag">Room: -</div><div class="pill" id="syncTag">Sync: lokaal</div><button class="secondary" onclick="toggleMode()" id="modeButton">Open pitwall</button><a class="linkBtn secondary" href="index.html">Start</a></div>
+    </div>
+    <div class="layout">
+      <section class="driverCol"><div class="card driverCard"><div><div class="sectionTitle">Mijn beste ronde</div><div class="heroValue" id="heroValue">--</div><div class="heroLabel" id="heroSubtitle">Wacht op pitwall update</div><div class="statusBar"><div><div class="statusMain yellow" id="statusValue">READY</div><div class="statusSub" id="statusNote">Standaard status</div></div><div class="statusFlag">QUALI</div></div><div class="metrics"><div class="metric"><div class="label">Snelste baanronde</div><div class="value" id="trackBestDisplay">--</div><div class="sub" id="trackBestSub">&nbsp;</div></div><div class="metric"><div class="label">Gap</div><div class="value" id="gapDisplay">--</div><div class="sub" id="gapSub">&nbsp;</div></div><div class="metric"><div class="label">Target lap</div><div class="value" id="targetDisplay">--</div><div class="sub" id="targetSub">&nbsp;</div></div><div class="metric"><div class="label">Room</div><div class="value" id="roomDisplay">--</div><div class="sub">gedeelde sessie</div></div></div></div><div class="footerNote">Deze driver view is bewust rustig gehouden: grote cijfers, weinig afleiding en geen invoer nodig voor de coureur.</div></div></section>
+      <aside class="pitCol"><div class="card pitCard"><div class="pitHeader"><div><h2>Pitwall bediening</h2><p>Voer de data hier in. Alles wordt direct doorgestuurd naar de driver view wanneer Firebase is ingesteld.</p></div><div class="switches"><button class="danger" onclick="resetDashboard()">Reset</button></div></div><div class="formGrid"><div class="field"><label for="headline">Mijn beste ronde</label><input id="headline" placeholder="Mijn beste ronde"></div><div class="field"><label for="trackBest">Snelste baanronde</label><input id="trackBest" placeholder="Snelste baanronde"></div><div class="field"><label for="gap">Gap</label><input id="gap" placeholder="Gap"></div><div class="field"><label for="target">Target lap</label><input id="target" placeholder="Target lap"></div><div class="field"><label for="status">Status</label><input id="status" placeholder="bijv. PUSH / BOX / HOLD"></div><div class="field"><label for="note">Engineer note</label><textarea id="note" placeholder="korte extra instructie voor driver"></textarea></div></div><div class="quick"><button onclick="quickStatus('PUSH','Nog 1 ronde pushen')">PUSH</button><button onclick="quickStatus('BUILD','Banden opbouwen')">BUILD</button><button onclick="quickStatus('BOX','Deze ronde boxen')">BOX</button><button onclick="quickStatus('COOL','1 ronde koelen')">COOL</button><button onclick="quickStatus('TRACK','Vrije baan zoeken')">TRACK</button><button onclick="quickStatus('LAST','Laatste kans ronde')">LAST</button></div><div class="switches"><button class="primary" onclick="pushUpdate()">Verstuur update</button><button class="secondary" onclick="fillDemo()">Demo data</button><button class="secondary" onclick="copyLink()">Kopieer driver link</button></div><div class="footerNote">Gebruik dezelfde room op pitwall en driver. Zonder Firebase werkt de demo alleen lokaal in dezelfde browser.</div></div></aside>
+    </div>
   </div>
-
+  <script src="firebase-config.js"></script>
   <script type="module">
-    const DEFAULT_STATE = {
-      driverName: 'Driver',
-      bestLap: '--.---',
-      trackBest: '--.---',
-      gapTarget: '+0.000',
-      callText: 'BUILD',
-      statusText: 'READY FOR PUSH',
-      notes: 'Warm tyres. Build the lap. Minimum steering input.'
-    };
-
-    const FIREBASE_CONFIG = {
-      apiKey: '',
-      authDomain: '',
-      databaseURL: '',
-      projectId: '',
-      storageBucket: '',
-      messagingSenderId: '',
-      appId: ''
-    };
-
-    const params = new URLSearchParams(location.search);
-    const isPit = params.get('pit') === '1';
-    let room = params.get('room') || 'default';
-    const pageKey = 'quali';
-    const storageKey = `race_dash_${pageKey}_${room}`;
-
-    document.body.classList.toggle('pit', isPit);
-    document.getElementById('modeChip').textContent = isPit ? 'pitwall mode' : 'driver mode';
-    document.getElementById('roomChip').textContent = `room: ${room}`;
-
-    const ui = {
-      bestLap: document.getElementById('bestLap'),
-      trackBest: document.getElementById('trackBest'),
-      gapTarget: document.getElementById('gapTarget'),
-      callText: document.getElementById('callText'),
-      statusText: document.getElementById('statusText'),
-      notes: document.getElementById('notes'),
-      roomInput: document.getElementById('roomInput'),
-      driverName: document.getElementById('driverName'),
-      bestLapInput: document.getElementById('bestLapInput'),
-      trackBestInput: document.getElementById('trackBestInput'),
-      gapTargetInput: document.getElementById('gapTargetInput'),
-      callTextInput: document.getElementById('callTextInput'),
-      statusInput: document.getElementById('statusInput'),
-      notesInput: document.getElementById('notesInput'),
-      saveBtn: document.getElementById('saveBtn'),
-      resetBtn: document.getElementById('resetBtn'),
-      copyDriverLinkBtn: document.getElementById('copyDriverLinkBtn'),
-      modeToggleBtn: document.getElementById('modeToggleBtn')
-    };
-
-    function scoreClass(value){
-      const t = String(value).toUpperCase();
-      if (t.includes('PUSH') || t.includes('READY')) return 'good';
-      if (t.includes('BUILD') || t.includes('COOL')) return 'warn';
-      if (t.includes('ABORT')) return 'bad';
-      return '';
-    }
-
-    function applyState(state){
-      ui.bestLap.textContent = state.bestLap || DEFAULT_STATE.bestLap;
-      ui.trackBest.textContent = state.trackBest || DEFAULT_STATE.trackBest;
-      ui.gapTarget.textContent = state.gapTarget || DEFAULT_STATE.gapTarget;
-      ui.callText.textContent = state.callText || DEFAULT_STATE.callText;
-      ui.statusText.textContent = state.statusText || DEFAULT_STATE.statusText;
-      ui.notes.textContent = state.notes || DEFAULT_STATE.notes;
-      ui.statusText.className = `statusBox ${scoreClass(state.statusText)}`.trim();
-      ui.callText.className = `metricValue small ${scoreClass(state.callText)}`.trim();
-      if (isPit){
-        ui.roomInput.value = room;
-        ui.driverName.value = state.driverName || '';
-        ui.bestLapInput.value = state.bestLap || '';
-        ui.trackBestInput.value = state.trackBest || '';
-        ui.gapTargetInput.value = state.gapTarget || '';
-        ui.callTextInput.value = state.callText || 'BUILD';
-        ui.statusInput.value = state.statusText || 'READY FOR PUSH';
-        ui.notesInput.value = state.notes || '';
-      }
-      document.title = `${state.driverName || 'Driver'} • Qualifying`;
-    }
-
-    function readLocal(){
-      try { return JSON.parse(localStorage.getItem(storageKey)) || DEFAULT_STATE; }
-      catch { return DEFAULT_STATE; }
-    }
-
-    function writeLocal(state){ localStorage.setItem(storageKey, JSON.stringify(state)); }
-
-    const hasFirebase = Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.projectId);
-    let dbRef = null;
-
-    async function initFirebase(){
-      if (!hasFirebase) return null;
-      const [{ initializeApp }, { getDatabase, ref, onValue, set }] = await Promise.all([
-        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js')
-      ]);
-      const app = initializeApp(FIREBASE_CONFIG);
-      const db = getDatabase(app);
-      dbRef = ref(db, `dashboards/${room}/${pageKey}`);
-      onValue(dbRef, snap => applyState({ ...DEFAULT_STATE, ...(snap.val() || readLocal()) }));
-      return { set };
-    }
-
-    let firebaseApi = null;
-    initFirebase().then(api => { firebaseApi = api; }).catch(() => applyState(readLocal()));
-
-    applyState(readLocal());
-    window.addEventListener('storage', (e) => { if (e.key === storageKey) applyState(readLocal()); });
-
-
-    function buildModeUrl(forcePit, targetRoom = room){
-      const url = new URL(location.href);
-      url.searchParams.set('room', (targetRoom || 'default').trim());
-      if (forcePit) url.searchParams.set('pit', '1');
-      else url.searchParams.delete('pit');
-      return url.toString();
-    }
-
-    ui.modeToggleBtn.textContent = isPit ? 'Open driver view' : 'Open pitwall';
-    ui.modeToggleBtn.addEventListener('click', () => {
-      const targetRoom = isPit ? room : ((ui.roomInput && ui.roomInput.value) || room || 'default');
-      location.href = buildModeUrl(!isPit, targetRoom);
-    });
-
-    function collectState(){
-      return {
-        driverName: ui.driverName.value || 'Driver',
-        bestLap: ui.bestLapInput.value || '--.---',
-        trackBest: ui.trackBestInput.value || '--.---',
-        gapTarget: ui.gapTargetInput.value || '+0.000',
-        callText: ui.callTextInput.value || 'BUILD',
-        statusText: ui.statusInput.value || 'READY FOR PUSH',
-        notes: ui.notesInput.value || DEFAULT_STATE.notes
-      };
-    }
-
-    if (isPit){
-      ui.saveBtn.addEventListener('click', async () => {
-        const requestedRoom = (ui.roomInput.value || 'default').trim();
-        if (requestedRoom !== room) {
-          location.href = buildModeUrl(true, requestedRoom);
-          return;
-        }
-        const next = collectState();
-        writeLocal(next);
-        applyState(next);
-        if (firebaseApi?.set && dbRef) await firebaseApi.set(dbRef, next);
-      });
-
-      ui.resetBtn.addEventListener('click', async () => {
-        writeLocal(DEFAULT_STATE);
-        applyState(DEFAULT_STATE);
-        if (firebaseApi?.set && dbRef) await firebaseApi.set(dbRef, DEFAULT_STATE);
-      });
-
-      ui.copyDriverLinkBtn.addEventListener('click', async () => {
-        const targetRoom = (ui.roomInput.value || room || 'default').trim();
-        await navigator.clipboard.writeText(buildModeUrl(false, targetRoom));
-        ui.copyDriverLinkBtn.textContent = 'Driver link gekopieerd';
-        setTimeout(() => ui.copyDriverLinkBtn.textContent = 'Kopieer driver link', 1800);
-      });
-    }
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    const PAGE_KEY='quali';
+    const DEFAULTS={headline:'--',trackBest:'--',gap:'--',target:'--',status:'READY',note:''};
+    const DEMO={headline:'41.284',trackBest:'40.991',gap:'+0.293',target:'41.1',status:'PUSH',note:'Nog 2 ronden. Vrije baan zoeken.'};
+    const FIELD_IDS=['headline','trackBest','gap','target'];
+    const params=new URLSearchParams(location.search); const room=(params.get('room')||'team-a').trim().toLowerCase(); let isPit=params.get('pit')==='1'; let firebaseReady=false; let db=null; let state=loadLocal();
+    document.getElementById('roomTag').textContent='Room: '+room; document.getElementById('roomDisplay').textContent=room;
+    function loadLocal(){try{const raw=localStorage.getItem('dash-'+PAGE_KEY+'-'+room);return raw?{...DEFAULTS,...JSON.parse(raw)}:{...DEFAULTS}}catch{return {...DEFAULTS}}}
+    function saveLocal(data){localStorage.setItem('dash-'+PAGE_KEY+'-'+room,JSON.stringify(data))}
+    function hasFirebaseConfig(cfg){return cfg&&cfg.apiKey&&cfg.projectId&&cfg.appId&&(cfg.databaseURL||cfg.authDomain)}
+    const cfg=window.DASHBOARD_FIREBASE_CONFIG; if(hasFirebaseConfig(cfg)){try{const app=initializeApp(cfg);db=getDatabase(app);firebaseReady=true;document.getElementById('syncTag').textContent='Sync: Firebase live';onValue(ref(db,'dashboards/'+room+'/'+PAGE_KEY),(snap)=>{if(snap.exists()){state={...DEFAULTS,...snap.val()};saveLocal(state);render();}})}catch(err){console.error(err)}}
+    window.toggleMode=function(){const url=new URL(location.href); if(isPit) url.searchParams.delete('pit'); else url.searchParams.set('pit','1'); location.href=url.toString();};
+    window.quickStatus=function(label,note){document.getElementById('status').value=label;document.getElementById('note').value=note;pushUpdate();};
+    window.fillDemo=function(){Object.entries(DEMO).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;}); pushUpdate();};
+    window.copyLink=async function(){const url=new URL(location.href); url.searchParams.delete('pit'); try{await navigator.clipboard.writeText(url.toString()); alert('Driver link gekopieerd');}catch{prompt('Kopieer deze driver link:',url.toString());}};
+    window.resetDashboard=async function(){if(!confirm('Weet je zeker dat je dit dashboard wilt resetten?')) return; state={...DEFAULTS}; saveLocal(state); render(); if(firebaseReady) await set(ref(db,'dashboards/'+room+'/'+PAGE_KEY),state);};
+    window.pushUpdate=async function(){const next={...state}; FIELD_IDS.forEach(id=>{const el=document.getElementById(id); if(el) next[id]=el.value.trim();}); next.status=document.getElementById('status').value.trim(); next.note=document.getElementById('note').value.trim(); state=next; saveLocal(state); render(); if(firebaseReady) await set(ref(db,'dashboards/'+room+'/'+PAGE_KEY),state);};
+    function statusClass(text){const t=(text||'').toUpperCase(); if(['PUSH','ATTACK','GO','TRACK'].some(k=>t.includes(k))) return 'green'; if(['BOX','PIT','DEFEND','SAVE','COOL'].some(k=>t.includes(k))) return 'red'; return 'yellow';}
+    function render(){document.body.classList.toggle('hidePit',!isPit); document.getElementById('modeButton').textContent=isPit?'Open driver view':'Open pitwall'; document.getElementById('modeText').textContent=isPit?'Pitwall view · invoeren en direct doorsturen naar driver':'Driver view · grote leesbare data voor telefoon op stuur'; document.getElementById('heroValue').textContent=state.headline||'--'; document.getElementById('heroSubtitle').textContent=state.note||'Wacht op pitwall update'; const s=document.getElementById('statusValue'); s.textContent=state.status||'READY'; s.className='statusMain '+statusClass(state.status); document.getElementById('statusNote').textContent=state.note||'Standaard status'; [['trackBest','trackBestDisplay','trackBestSub'],['gap','gapDisplay','gapSub'],['target','targetDisplay','targetSub']].forEach(([key,disp,sub])=>{document.getElementById(disp).textContent=state[key]||'--'; document.getElementById(sub).textContent=state[key]?'live update':'\u00a0';}); FIELD_IDS.forEach(id=>{const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=state[id]||'';}); if(document.activeElement!==document.getElementById('status')) document.getElementById('status').value=state.status||''; if(document.activeElement!==document.getElementById('note')) document.getElementById('note').value=state.note||'';}
+    render();
   </script>
 </body>
 </html>
