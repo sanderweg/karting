@@ -1,1 +1,91 @@
-<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Race dashboard</title><style>body{margin:0;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#132a62 0%,#07142f 38%,#020713 100%);color:#fff;min-height:100vh;display:grid;place-items:center;padding:24px}.wrap{width:min(760px,100%);background:rgba(18,30,64,.74);border:1px solid rgba(255,255,255,.09);border-radius:28px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.35)}h1{margin:0 0 8px;font-size:36px}p{color:#a9bbdf}.row{display:grid;gap:12px;margin-top:18px}input{padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:#091127;color:#fff;font-size:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}a{display:block;text-align:center;padding:18px;border-radius:18px;background:linear-gradient(180deg,#2b6fff,#1749c8);color:#fff;text-decoration:none;font-weight:800}@media(max-width:720px){.grid{grid-template-columns:1fr}}</style></head><body><div class="wrap"><h1>Race dashboard</h1><p>Kies een room en open direct de fullscreen driver-view of de pitwall.</p><div class="row"><input id="room" placeholder="oldenzaal" value="oldenzaal"></div><div class="grid"><a href="#" onclick="go('quali.html');return false;">Quali</a><a href="#" onclick="go('sprint.html');return false;">Sprint</a><a href="#" onclick="go('endurance.html');return false;">Endurance</a></div></div><script>function go(page){const room=document.getElementById('room').value.trim()||'oldenzaal';location.href=page+'?room='+encodeURIComponent(room);} </script></body></html>
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Race dashboard</title>
+  <style>
+    :root{--bg:#06102a;--bg2:#020713;--panel:rgba(18,30,64,.74);--panel-strong:rgba(14,24,52,.92);--border:rgba(255,255,255,.09);--text:#f6f8ff;--muted:#9ab0de;--accent:#7fb0ff;--shadow:0 20px 50px rgba(0,0,0,.35)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#132a62 0%,#07142f 38%,#020713 100%);color:#fff;min-height:100vh;display:grid;place-items:center;padding:24px}
+    .wrap{width:min(820px,100%);background:rgba(18,30,64,.74);border:1px solid rgba(255,255,255,.09);border-radius:28px;padding:28px;box-shadow:var(--shadow)}
+    h1{margin:0 0 8px;font-size:38px}
+    p{margin:0;color:#a9bbdf;line-height:1.5}
+    .stack{display:grid;gap:16px;margin-top:22px}
+    input{width:100%;padding:16px 18px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#091127;color:#fff;font-size:18px}
+    .chooser{display:grid;gap:10px;padding:18px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+    .chooser-title{font-size:14px;text-transform:uppercase;letter-spacing:.16em;color:#9ab0de}
+    .switch{position:relative;display:grid;grid-template-columns:1fr 1fr;background:#091127;border:1px solid rgba(255,255,255,.09);padding:6px;border-radius:999px;overflow:hidden}
+    .switch-thumb{position:absolute;top:6px;left:6px;width:calc(50% - 6px);height:calc(100% - 12px);border-radius:999px;background:linear-gradient(180deg,#2b6fff,#1749c8);transition:transform .22s ease;box-shadow:0 10px 25px rgba(14,63,188,.35)}
+    .switch[data-mode="pit"] .switch-thumb{transform:translateX(100%)}
+    .switch button{position:relative;z-index:1;appearance:none;border:0;background:transparent;color:#dbe6ff;padding:14px 16px;border-radius:999px;font-weight:800;font-size:15px;cursor:pointer}
+    .hint{font-size:14px;color:#a9bbdf}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .card{display:grid;gap:6px;padding:18px;border-radius:20px;background:linear-gradient(180deg,rgba(43,111,255,.95),rgba(23,73,200,.94));color:#fff;text-decoration:none;font-weight:800;box-shadow:0 16px 34px rgba(9,28,76,.28)}
+    .card small{font-size:13px;font-weight:600;opacity:.9}
+    @media (max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:22px}h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Race dashboard</h1>
+    <p>Kies eerst de room en schuif daarna naar <strong>Driver</strong> of <strong>Pitwall</strong>. Daarna open je direct de juiste pagina.</p>
+
+    <div class="stack">
+      <input id="room" placeholder="oldenzaal" value="oldenzaal" autocomplete="off">
+
+      <div class="chooser">
+        <div class="chooser-title">Startmodus</div>
+        <div class="switch" id="modeSwitch" data-mode="driver" role="tablist" aria-label="Kies modus">
+          <div class="switch-thumb"></div>
+          <button type="button" data-mode="driver" aria-selected="true">Driver</button>
+          <button type="button" data-mode="pit" aria-selected="false">Pitwall</button>
+        </div>
+        <div class="hint" id="modeHint">Driver toont alleen de belangrijkste live info in fullscreen focus mode.</div>
+      </div>
+
+      <div class="grid">
+        <a class="card" href="#" onclick="go('quali.html');return false;">Quali<small>Open gekozen modus</small></a>
+        <a class="card" href="#" onclick="go('sprint.html');return false;">Sprint<small>Open gekozen modus</small></a>
+        <a class="card" href="#" onclick="go('endurance.html');return false;">Endurance<small>Open gekozen modus</small></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMode = 'driver';
+    const switchEl = document.getElementById('modeSwitch');
+    const hintEl = document.getElementById('modeHint');
+    const hints = {
+      driver: 'Driver toont alleen de belangrijkste live info in fullscreen focus mode.',
+      pit: 'Pitwall opent de invoerpagina zodat je updates live naar de driver kunt sturen.'
+    };
+
+    function setMode(mode){
+      selectedMode = mode;
+      switchEl.dataset.mode = mode;
+      [...switchEl.querySelectorAll('button')].forEach(btn => {
+        const active = btn.dataset.mode === mode;
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      hintEl.textContent = hints[mode];
+    }
+
+    switchEl.addEventListener('click', (event) => {
+      const btn = event.target.closest('button[data-mode]');
+      if (!btn) return;
+      setMode(btn.dataset.mode);
+    });
+
+    function go(page){
+      const room = document.getElementById('room').value.trim() || 'oldenzaal';
+      const url = new URL(page, location.href);
+      url.searchParams.set('room', room);
+      if (selectedMode === 'pit') {
+        url.searchParams.set('pit', '1');
+      }
+      location.href = url.toString();
+    }
+  </script>
+</body>
+</html>
