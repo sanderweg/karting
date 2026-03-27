@@ -1,50 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-<title>Endurance Dashboard</title>
-<script src="code.js"></script>
-<style>
-body{background:#111;color:white;text-align:center;font-family:Arial;}
-.box{margin:15px;padding:20px;background:#222;border-radius:10px;font-size:26px;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quali V4 Pro</title>
+  <style>
+    :root{
+      --panel:rgba(0,0,0,.86);
+      --card:#101010;
+      --card2:#171717;
+      --border:#2d2d2d;
+      --text:#fff;
+      --muted:#b8b8b8;
+      --green:#31ff62;
+      --red:#ff5252;
+      --yellow:#ffd84a;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:#000;
+      color:#fff;
+      font-family:Arial, Helvetica, sans-serif;
+      overflow:hidden;
+    }
+
+    #overlay{
+      position:fixed;
+      top:14px;
+      left:14px;
+      z-index:9999;
+      width:min(400px, calc(100vw - 28px));
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 16px 40px rgba(0,0,0,.45);
+    }
+
+    h1{
+      margin:0 0 6px 0;
+      font-size:28px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .field{
+      margin-bottom:12px;
+    }
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    select{
+      width:100%;
+      border:1px solid #444;
+      background:#0d0d0d;
+      color:#fff;
+      border-radius:12px;
+      padding:12px 13px;
+      font-size:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card2),var(--card));
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      margin-top:10px;
+    }
+
+    .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .value{
+      font-size:34px;
+      font-weight:700;
+      line-height:1.1;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .action{
+      border:none;
+      background:#151515;
+      color:#fff;
+      border-radius:14px;
+      padding:14px 10px;
+      font-size:16px;
+      cursor:pointer;
+      border:1px solid var(--border);
+    }
+
+    .action:hover{
+      border-color:#4d43ff;
+    }
+
+    .green{color:var(--green)}
+    .red{color:var(--red)}
+    .yellow{color:var(--yellow)}
+
+    .buttonsTop{
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .iconBtn{
+      border:1px solid var(--border);
+      background:#111;
+      color:#fff;
+      border-radius:12px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .collapsed #overlayBody{display:none}
+    .compact #overlay{width:300px}
+
+    iframe{
+      width:100vw;
+      height:100vh;
+      border:0;
+    }
+  </style>
 </head>
-
 <body>
+  <div id="overlay">
+    <div class="buttonsTop">
+      <button class="iconBtn" onclick="toggleCompact()">Compact</button>
+      <button class="iconBtn" onclick="toggleCollapse()">Verberg</button>
+    </div>
 
-<h1>ENDURANCE</h1>
+    <div id="overlayBody">
+      <h1>Quali</h1>
+      <div class="subtitle">V4 Pro overlay</div>
 
-<div class="box">Positie: <span id="pos"></span></div>
-<div class="box">Voor: <span id="front"></span></div>
-<div class="box">Pitstops voor: <span id="frontPit"></span></div>
-<div class="box">Achter: <span id="behind"></span></div>
-<div class="box">Pitstops achter: <span id="behindPit"></span></div>
-<div class="box">Tijd: <span id="time"></span></div>
+      <div class="field">
+        <label for="kart">Kartnummer</label>
+        <select id="kart">
+          <option>1</option>
+          <option>4</option>
+          <option>5</option>
+          <option>11</option>
+          <option>13</option>
+          <option>18</option>
+        </select>
+      </div>
 
-<script>
-let kart = new URLSearchParams(window.location.search).get("kart")
+      <div class="card">
+        <div class="label">Mijn snelste</div>
+        <div class="value" id="myBest">👀</div>
+      </div>
 
-async function update(){
+      <div class="card">
+        <div class="label">Snelste van de baan</div>
+        <div class="value" id="trackBest">👀</div>
+      </div>
 
-let rows = await getRows()
-if(!rows) return
+      <div class="card">
+        <div class="label">Gap</div>
+        <div class="value yellow" id="gap">👀</div>
+      </div>
 
-let i = rows.findIndex(r => r.children[1]?.innerText.trim() == kart)
-if(i === -1) return
+      <div class="controls">
+        <button class="action" onclick="setMyBest()">Mijn tijd</button>
+        <button class="action" onclick="setTrackBest()">Baan tijd</button>
+        <button class="action" onclick="calcGap()">Bereken gap</button>
+        <button class="action" onclick="resetQuali()">Reset</button>
+      </div>
+    </div>
+  </div>
 
-let front = rows[i-1]
-let back = rows[i+1]
+  <iframe src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"></iframe>
 
-document.getElementById("pos").innerText = i+1
-document.getElementById("front").innerText = front?.children[1]?.innerText || "-"
-document.getElementById("behind").innerText = back?.children[1]?.innerText || "-"
-document.getElementById("frontPit").innerText = front?.children[5]?.innerText || "-"
-document.getElementById("behindPit").innerText = back?.children[5]?.innerText || "-"
-document.getElementById("time").innerText = document.querySelector(".chrono")?.innerText || "-"
+  <script>
+    function askValue(title, currentValue = "") {
+      const value = prompt(title, currentValue);
+      if (value === null) return null;
+      return value.trim();
+    }
 
-}
+    function setMyBest() {
+      const el = document.getElementById("myBest");
+      const value = askValue("Wat is jouw snelste tijd?", el.textContent);
+      if (value) el.textContent = value;
+    }
 
-setInterval(update,2000)
-</script>
+    function setTrackBest() {
+      const el = document.getElementById("trackBest");
+      const value = askValue("Wat is de snelste tijd van de baan?", el.textContent);
+      if (value) el.textContent = value;
+    }
 
+    function toSeconds(t) {
+      if (!t || t === "👀") return null;
+      const parts = t.split(":");
+      if (parts.length === 2) {
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+      }
+      return parseFloat(t);
+    }
+
+    function calcGap() {
+      const myBest = document.getElementById("myBest").textContent.trim();
+      const trackBest = document.getElementById("trackBest").textContent.trim();
+      const gapEl = document.getElementById("gap");
+
+      const a = toSeconds(myBest);
+      const b = toSeconds(trackBest);
+
+      if (a === null || b === null || isNaN(a) || isNaN(b)) {
+        gapEl.textContent = "👀";
+        gapEl.className = "value yellow";
+        return;
+      }
+
+      const diff = (a - b).toFixed(3);
+      gapEl.textContent = "+" + diff;
+      gapEl.className = "value";
+      if (parseFloat(diff) <= 0.200) gapEl.classList.add("green");
+      else if (parseFloat(diff) <= 0.500) gapEl.classList.add("yellow");
+      else gapEl.classList.add("red");
+    }
+
+    function resetQuali() {
+      document.getElementById("myBest").textContent = "👀";
+      document.getElementById("trackBest").textContent = "👀";
+      const g = document.getElementById("gap");
+      g.textContent = "👀";
+      g.className = "value yellow";
+    }
+
+    function toggleCollapse() {
+      document.body.classList.toggle("collapsed");
+    }
+
+    function toggleCompact() {
+      document.body.classList.toggle("compact");
+    }
+  </script>
 </body>
 </html>
