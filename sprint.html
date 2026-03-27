@@ -1,53 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Sprint Dashboard</title>
-<script src="code.js"></script>
+
 <style>
-body{background:#111;color:white;text-align:center;font-family:Arial;}
-.box{margin:15px;padding:20px;background:#222;border-radius:10px;font-size:28px;}
+body {
+  margin:0;
+  background:black;
+  font-family:Arial;
+  color:white;
+}
+
+#overlay {
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:9999;
+  background:rgba(0,0,0,0.85);
+  padding:20px;
+  border-radius:15px;
+  width:280px;
+}
+
+#overlay h1 {
+  margin:0 0 10px 0;
+}
+
+select {
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  background:#111;
+  color:white;
+  border:1px solid #444;
+}
+
+.card {
+  background:#111;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  font-size:18px;
+}
+
+.big {
+  font-size:28px;
+  font-weight:bold;
+}
+
+iframe {
+  width:100%;
+  height:100vh;
+  border:0;
+}
 </style>
 </head>
 
 <body>
 
-<h1>SPRINT</h1>
+<div id="overlay">
+  <h1>Sprint</h1>
 
-<div class="box">Positie: <span id="pos"></span></div>
-<div class="box">Voor: <span id="front"></span></div>
-<div class="box">Achter: <span id="behind"></span></div>
-<div class="box">Tijd: <span id="time"></span></div>
+  <select id="kart">
+    <option>5</option>
+    <option>4</option>
+    <option>18</option>
+    <option>13</option>
+    <option>11</option>
+    <option>1</option>
+  </select>
 
-<script>
-let kart = new URLSearchParams(window.location.search).get("kart")
+  <div class="card">Positie: <span class="big">👀</span></div>
+  <div class="card">Voor: <span>👀</span></div>
+  <div class="card">Achter: <span>👀</span></div>
+  <div class="card">Tijd: <span>👀</span></div>
+</div>
 
-async function update(){
-
-let rows = await getRows()
-if(!rows) return
-
-let myIndex = -1
-
-rows.forEach((r,i)=>{
-    let k = r.children[1]?.innerText.trim()
-    if(k == kart) myIndex = i
-})
-
-if(myIndex === -1) return
-
-let myRow = rows[myIndex]
-let front = rows[myIndex-1]
-let back = rows[myIndex+1]
-
-document.getElementById("pos").innerText = myIndex+1
-document.getElementById("front").innerText = front ? front.children[1].innerText : "-"
-document.getElementById("behind").innerText = back ? back.children[1].innerText : "-"
-document.getElementById("time").innerText = document.querySelector(".chrono")?.innerText || "-"
-
-}
-
-setInterval(update,2000)
-</script>
+<iframe src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"></iframe>
 
 </body>
 </html>
