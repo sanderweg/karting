@@ -7,11 +7,15 @@
   <style>
     :root{--bg:#06102a;--bg2:#020713;--panel:rgba(18,30,64,.74);--panel-strong:rgba(14,24,52,.92);--border:rgba(255,255,255,.09);--text:#f6f8ff;--muted:#9ab0de;--accent:#7fb0ff;--gold:#ffd364;--green:#71f0a7;--danger:#ff7f7f;--shadow:0 20px 50px rgba(0,0,0,.35)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#132a62 0%,#07142f 38%,#020713 100%);color:var(--text)}
+    html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:linear-gradient(rgba(2,7,19,.58),rgba(2,7,19,.78)), url('./achtergrond.png') center/cover no-repeat fixed;color:var(--text)}
     body{padding:0;}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at center, rgba(9,20,54,.18), rgba(2,7,19,.42));pointer-events:none}
+    .app{position:relative;z-index:1}
     .app{min-height:100vh;display:grid;grid-template-rows:auto 1fr;}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(180deg,rgba(2,7,19,.72),rgba(2,7,19,.26));backdrop-filter:blur(10px)}
-    .brand{display:flex;flex-direction:column;gap:4px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(180deg,rgba(2,7,19,.80),rgba(2,7,19,.34));backdrop-filter:blur(12px)}
+    .brand{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .brand-copy{display:flex;flex-direction:column;gap:4px}
+    .team-logo{height:54px;width:auto;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
     .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
     .title{font-size:24px;font-weight:800;letter-spacing:.02em}
     .meta{font-size:12px;color:var(--muted)}
@@ -20,19 +24,19 @@
     .btn.primary{background:linear-gradient(180deg,#2b6fff,#1749c8);border-color:rgba(255,255,255,.12)}
     .btn.ghost{background:rgba(255,255,255,.02)}
     .screen{padding:16px;display:grid;gap:14px;min-height:0}
-    .hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:18px 18px 16px;border-radius:26px;background:linear-gradient(135deg,rgba(29,43,86,.82),rgba(11,19,42,.92));border:1px solid var(--border);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:18px 18px 16px;border-radius:26px;background:linear-gradient(135deg,rgba(17,28,64,.76),rgba(7,14,35,.86));border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);backdrop-filter:blur(10px)}
     .hero-label{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:6px}
     .hero-value{font-size:clamp(52px,15vw,108px);line-height:.9;font-weight:900;color:var(--gold)}
     .hero-sub{margin-top:8px;font-size:22px;color:#dce6ff}
     .mode-chip{padding:14px 18px;border-radius:18px;border:1px solid var(--border);font-weight:700;color:var(--accent);background:rgba(255,255,255,.03)}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .card{padding:18px;border-radius:22px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+    .card{padding:18px;border-radius:22px;background:rgba(10,19,46,.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.10);box-shadow:var(--shadow);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
     .label{font-size:14px;color:var(--muted)}
     .value{font-size:clamp(34px,8vw,62px);font-weight:800;line-height:1.02;word-break:break-word}
     .note{font-size:14px;color:var(--muted)}
     .pitwrap{display:none;max-width:900px;margin:0 auto;width:100%}
     .pitgrid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    .field{display:grid;gap:8px;padding:18px;border-radius:22px;background:var(--panel-strong);border:1px solid var(--border)}
+    .field{display:grid;gap:8px;padding:18px;border-radius:22px;background:rgba(9,16,38,.82);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.10)}
     label{font-size:13px;color:var(--muted)}
     input,textarea,select{width:100%;padding:14px 16px;background:#091127;color:#fff;border:1px solid var(--border);border-radius:14px;font-size:18px}
     textarea{min-height:110px;resize:vertical}
@@ -200,9 +204,12 @@
   <div class="app">
     <div class="topbar">
       <div class="brand">
+        <img src="./logo.png" alt="Team Endurance NL logo" class="team-logo">
+        <div class="brand-copy">
         <div class="eyebrow">Driver dashboard</div>
         <div class="title">Endurance</div>
         <div class="meta">room <strong id="roomMeta"></strong> · <span data-sync>sync lokaal</span> · update <span data-updated>--:--</span></div>
+        </div>
       </div>
       <div class="controls">
         <a class="btn ghost" id="focusLink" href="#">Focus mode</a>
