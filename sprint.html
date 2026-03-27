@@ -1,83 +1,327 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-<meta charset="UTF-8">
-<title>Sprint Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprint V4 Pro</title>
+  <style>
+    :root{
+      --bg:#050505;
+      --panel:rgba(0,0,0,.86);
+      --card:#101010;
+      --card2:#171717;
+      --border:#2d2d2d;
+      --text:#fff;
+      --muted:#b8b8b8;
+      --accent:#2d19ff;
+      --green:#31ff62;
+      --red:#ff5252;
+      --yellow:#ffd84a;
+    }
 
-<style>
-body {
-  margin:0;
-  background:black;
-  font-family:Arial;
-  color:white;
-}
+    *{box-sizing:border-box}
 
-#overlay {
-  position:fixed;
-  top:10px;
-  left:10px;
-  z-index:9999;
-  background:rgba(0,0,0,0.85);
-  padding:20px;
-  border-radius:15px;
-  width:280px;
-}
+    body{
+      margin:0;
+      background:#000;
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      overflow:hidden;
+    }
 
-#overlay h1 {
-  margin:0 0 10px 0;
-}
+    #overlay{
+      position:fixed;
+      top:14px;
+      left:14px;
+      z-index:9999;
+      width:min(380px, calc(100vw - 28px));
+      background:var(--panel);
+      backdrop-filter:blur(8px);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:0 16px 40px rgba(0,0,0,.45);
+      padding:18px;
+    }
 
-select {
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  background:#111;
-  color:white;
-  border:1px solid #444;
-}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
 
-.card {
-  background:#111;
-  padding:10px;
-  margin-top:8px;
-  border-radius:10px;
-  font-size:18px;
-}
+    .titleWrap h1{
+      margin:0;
+      font-size:26px;
+      line-height:1;
+    }
 
-.big {
-  font-size:28px;
-  font-weight:bold;
-}
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+    }
 
-iframe {
-  width:100%;
-  height:100vh;
-  border:0;
-}
-</style>
+    .buttonsTop{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .iconBtn{
+      border:1px solid var(--border);
+      background:#111;
+      color:#fff;
+      border-radius:12px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .iconBtn:hover{
+      border-color:#4d43ff;
+    }
+
+    .field{
+      margin-bottom:12px;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    select, input{
+      width:100%;
+      border:1px solid #444;
+      background:#0d0d0d;
+      color:#fff;
+      border-radius:12px;
+      padding:12px 13px;
+      font-size:18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card2),var(--card));
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px 14px 12px 14px;
+    }
+
+    .cardLabel{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .cardValue{
+      font-size:34px;
+      font-weight:700;
+      line-height:1.1;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .action{
+      border:none;
+      background:#151515;
+      color:#fff;
+      border-radius:14px;
+      padding:14px 10px;
+      font-size:16px;
+      cursor:pointer;
+      border:1px solid var(--border);
+    }
+
+    .action:hover{
+      border-color:#4d43ff;
+    }
+
+    .green{color:var(--green)}
+    .red{color:var(--red)}
+    .yellow{color:var(--yellow)}
+
+    iframe{
+      width:100vw;
+      height:100vh;
+      border:0;
+      background:#000;
+    }
+
+    .footerNote{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    .collapsed #overlayBody{
+      display:none;
+    }
+
+    .compact #overlay{
+      width:300px;
+    }
+
+    @media (max-width:700px){
+      #overlay{
+        width:min(340px, calc(100vw - 20px));
+        top:10px;
+        left:10px;
+        padding:14px;
+      }
+      .cardValue{
+        font-size:28px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div id="overlay">
+    <div class="topbar">
+      <div class="titleWrap">
+        <h1>Sprint</h1>
+        <div class="subtitle">V4 Pro overlay</div>
+      </div>
+      <div class="buttonsTop">
+        <button class="iconBtn" onclick="toggleCompact()">Compact</button>
+        <button class="iconBtn" onclick="toggleCollapse()">Verberg</button>
+      </div>
+    </div>
 
-<div id="overlay">
-  <h1>Sprint</h1>
+    <div id="overlayBody">
+      <div class="field">
+        <label for="kart">Kartnummer</label>
+        <select id="kart">
+          <option>1</option>
+          <option>4</option>
+          <option>5</option>
+          <option>11</option>
+          <option>13</option>
+          <option>18</option>
+        </select>
+      </div>
 
-  <select id="kart">
-    <option>5</option>
-    <option>4</option>
-    <option>18</option>
-    <option>13</option>
-    <option>11</option>
-    <option>1</option>
-  </select>
+      <div class="grid">
+        <div class="card">
+          <div class="cardLabel">Positie</div>
+          <div class="cardValue" id="position">👀</div>
+        </div>
 
-  <div class="card">Positie: <span class="big">👀</span></div>
-  <div class="card">Voor: <span>👀</span></div>
-  <div class="card">Achter: <span>👀</span></div>
-  <div class="card">Tijd: <span>👀</span></div>
-</div>
+        <div class="card">
+          <div class="cardLabel">Voor</div>
+          <div class="cardValue" id="front">👀</div>
+        </div>
 
-<iframe src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"></iframe>
+        <div class="card">
+          <div class="cardLabel">Achter</div>
+          <div class="cardValue" id="behind">👀</div>
+        </div>
 
+        <div class="card">
+          <div class="cardLabel">Tijd</div>
+          <div class="cardValue" id="timeLeft">👀</div>
+        </div>
+
+        <div class="card">
+          <div class="cardLabel">Status</div>
+          <div class="cardValue yellow" id="statusText">READY</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="action" onclick="setPosition()">Positie</button>
+        <button class="action" onclick="setFront()">Voor</button>
+        <button class="action" onclick="setBehind()">Achter</button>
+        <button class="action" onclick="setTime()">Tijd</button>
+        <button class="action" onclick="setStatus()">Status</button>
+        <button class="action" onclick="resetSprint()">Reset</button>
+      </div>
+
+      <div class="footerNote">
+        Tip: gebruik dit als pitwall-overlay. De Apex-tabel blijft live zichtbaar op de achtergrond.
+      </div>
+    </div>
+  </div>
+
+  <iframe src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"></iframe>
+
+  <script>
+    function askValue(title, currentValue = "") {
+      const value = prompt(title, currentValue);
+      if (value === null) return null;
+      return value.trim();
+    }
+
+    function setPosition() {
+      const el = document.getElementById("position");
+      const value = askValue("Wat is je positie?", el.textContent);
+      if (value) el.textContent = value;
+    }
+
+    function setFront() {
+      const el = document.getElementById("front");
+      const value = askValue("Kart of gap voor je?", el.textContent);
+      if (value) el.textContent = value;
+    }
+
+    function setBehind() {
+      const el = document.getElementById("behind");
+      const value = askValue("Kart of gap achter je?", el.textContent);
+      if (value) el.textContent = value;
+    }
+
+    function setTime() {
+      const el = document.getElementById("timeLeft");
+      const value = askValue("Wat is de resterende tijd?", el.textContent);
+      if (value) el.textContent = value;
+    }
+
+    function setStatus() {
+      const el = document.getElementById("statusText");
+      const value = askValue("Status? Bijvoorbeeld PUSH / DEFEND / STABLE", el.textContent);
+      if (value) {
+        el.textContent = value.toUpperCase();
+        el.className = "cardValue";
+        if (el.textContent.includes("PUSH")) el.classList.add("green");
+        else if (el.textContent.includes("DEFEND")) el.classList.add("red");
+        else el.classList.add("yellow");
+      }
+    }
+
+    function resetSprint() {
+      document.getElementById("position").textContent = "👀";
+      document.getElementById("front").textContent = "👀";
+      document.getElementById("behind").textContent = "👀";
+      document.getElementById("timeLeft").textContent = "👀";
+      const s = document.getElementById("statusText");
+      s.textContent = "READY";
+      s.className = "cardValue yellow";
+    }
+
+    function toggleCollapse() {
+      document.body.classList.toggle("collapsed");
+    }
+
+    function toggleCompact() {
+      document.body.classList.toggle("compact");
+    }
+  </script>
 </body>
 </html>
