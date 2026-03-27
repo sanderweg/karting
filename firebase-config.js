@@ -1,5 +1,5 @@
 window.RACE_FIREBASE_CONFIG = window.RACE_FIREBASE_CONFIG || {
-  apiKey: "...",
+  apiKey: "AIzaSyC38ED_Kayrzx5zGIzX9vhABsyEaIdCIOw",
   authDomain: "race-dashboard-live.firebaseapp.com",
   databaseURL: "https://race-dashboard-live-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "race-dashboard-live",

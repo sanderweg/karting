@@ -4,195 +4,80 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Quali</title>
-  <style>
-    :root{--bg:#06102a;--bg2:#020713;--panel:rgba(18,30,64,.74);--panel-strong:rgba(14,24,52,.92);--border:rgba(255,255,255,.09);--text:#f6f8ff;--muted:#9ab0de;--accent:#7fb0ff;--gold:#ffd364;--green:#71f0a7;--danger:#ff7f7f;--shadow:0 20px 50px rgba(0,0,0,.35)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#132a62 0%,#07142f 38%,#020713 100%);color:var(--text)}
-    body{padding:0;}
-    .app{min-height:100vh;display:grid;grid-template-rows:auto 1fr;}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(180deg,rgba(2,7,19,.72),rgba(2,7,19,.26));backdrop-filter:blur(10px)}
-    .brand{display:flex;flex-direction:column;gap:4px}
-    .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-    .title{font-size:24px;font-weight:800;letter-spacing:.02em}
-    .meta{font-size:12px;color:var(--muted)}
-    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .btn{appearance:none;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);border-radius:14px;padding:12px 14px;font-weight:600;text-decoration:none;cursor:pointer}
-    .btn.primary{background:linear-gradient(180deg,#2b6fff,#1749c8);border-color:rgba(255,255,255,.12)}
-    .btn.ghost{background:rgba(255,255,255,.02)}
-    .screen{padding:16px;display:grid;gap:14px;min-height:0}
-    .hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:18px 18px 16px;border-radius:26px;background:linear-gradient(135deg,rgba(29,43,86,.82),rgba(11,19,42,.92));border:1px solid var(--border);box-shadow:var(--shadow)}
-    .hero-label{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:6px}
-    .hero-value{font-size:clamp(52px,15vw,108px);line-height:.9;font-weight:900;color:var(--gold)}
-    .hero-sub{margin-top:8px;font-size:22px;color:#dce6ff}
-    .mode-chip{padding:14px 18px;border-radius:18px;border:1px solid var(--border);font-weight:700;color:var(--accent);background:rgba(255,255,255,.03)}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .card{padding:18px;border-radius:22px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
-    .label{font-size:14px;color:var(--muted)}
-    .value{font-size:clamp(34px,8vw,62px);font-weight:800;line-height:1.02;word-break:break-word}
-    .note{font-size:14px;color:var(--muted)}
-    .pitwrap{display:none;max-width:900px;margin:0 auto;width:100%}
-    .pitgrid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    .field{display:grid;gap:8px;padding:18px;border-radius:22px;background:var(--panel-strong);border:1px solid var(--border)}
-    label{font-size:13px;color:var(--muted)}
-    input,textarea,select{width:100%;padding:14px 16px;background:#091127;color:#fff;border:1px solid var(--border);border-radius:14px;font-size:18px}
-    textarea{min-height:110px;resize:vertical}
-    .span2{grid-column:1/-1}
-    .quick{display:flex;gap:10px;flex-wrap:wrap}
-    .quick button{appearance:none;border:1px solid var(--border);background:rgba(255,255,255,.05);color:#fff;padding:12px 16px;border-radius:14px;font-weight:700;cursor:pointer}
-    .footer{font-size:12px;color:var(--muted)}
-    body.pit .driverwrap{display:none}
-    body.pit .pitwrap{display:block}
-    body.focus .topbar{display:none}
-    body.focus .screen{padding:10px;min-height:100vh;grid-template-rows:auto 1fr}
-    body.focus .hero{padding:16px 16px 12px}
-    body.focus .grid{gap:10px}
-    body.focus .card{min-height:132px;padding:16px}
-    @media (max-width:720px){
-      .topbar{padding:12px}
-      .title{font-size:20px}
-      .controls{gap:6px}
-      .btn{padding:10px 12px;font-size:14px}
-      .screen{padding:12px}
-      .grid,.pitgrid{grid-template-columns:1fr}
-      .hero{grid-template-columns:1fr;align-items:flex-start}
-      .hero-sub{font-size:18px}
-      .card{min-height:128px}
-      body.focus .screen{padding:8px}
-      body.focus .hero-value{font-size:clamp(56px,22vw,110px)}
-      body.focus .value{font-size:clamp(30px,10vw,52px)}
-    }
-  </style>
   <script src="./firebase-config.js"></script>
+  <style>
+    :root{{--bg:#05070d;--panel:rgba(8,12,24,.74);--panel-strong:rgba(10,15,29,.88);--line:rgba(255,255,255,.11);--text:#f7f8fc;--muted:#b2bdd5;--red:#e41f26;--blue:#2b67d1;--gold:#ffd25c;--white:#ffffff;--green:#39d98a;--shadow:0 18px 50px rgba(0,0,0,.38)}}
+    *{{box-sizing:border-box;-webkit-tap-highlight-color:transparent}} html,body{{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:#02050b;color:var(--text)}}
+    body::before{{content:'';position:fixed;inset:0;background:linear-gradient(rgba(1,4,10,.52),rgba(2,4,10,.82)), url('./team-achtergrond.png') center/cover no-repeat;z-index:-2}}
+    body::after{{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 0%, rgba(43,103,209,.22), transparent 34%), radial-gradient(circle at 80% 100%, rgba(228,31,38,.18), transparent 34%);z-index:-1}}
+    .app{{min-height:100vh;display:grid;grid-template-rows:auto 1fr}}
+    .topbar{{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,.08));backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}}
+    .brand{{display:flex;align-items:center;gap:12px;min-width:0}} .brand img{{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.12);background:#000}} .brandcopy{{min-width:0}}
+    .eyebrow{{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}} .title{{font-size:24px;font-weight:900}} .meta{{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+    .controls{{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}} .btn{{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);border-radius:14px;padding:12px 14px;font-weight:800;text-decoration:none;cursor:pointer}} .btn.primary{{background:linear-gradient(135deg,var(--blue),#7aa6ff)}} .btn.alert{{background:linear-gradient(135deg,var(--red),#ff6a70)}}
+    .statuspill{{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);margin-right:8px}} .statusdot{{width:10px;height:10px;border-radius:50%;background:#f0b43c;box-shadow:0 0 0 4px rgba(240,180,60,.14)}}
+    .driverwrap{{padding:14px;display:grid;gap:14px;align-content:start}} .hero{{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;background:linear-gradient(180deg,rgba(8,12,24,.56),rgba(8,12,24,.82));border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow)}}
+    .hero-label{{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}} .hero-value{{font-size:clamp(74px,18vw,160px);font-weight:1000;line-height:.88;letter-spacing:-.04em;margin-top:8px;text-shadow:0 8px 30px rgba(0,0,0,.25)}} .hero-sub{{font-size:clamp(20px,4.6vw,34px);font-weight:700;color:#e9efff;margin-top:10px}}
+    .mode-chip{{padding:14px 18px;border-radius:18px;border:1px solid var(--line);font-weight:900;color:#dfe8ff;background:rgba(255,255,255,.04);letter-spacing:.08em}} .stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}}
+    .card{{background:linear-gradient(180deg,rgba(8,12,24,.54),rgba(8,12,24,.84));border:1px solid var(--line);border-radius:24px;padding:18px}} .label{{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}} .value{{font-size:clamp(34px,6vw,58px);font-weight:900;line-height:1}} .note{{margin-top:10px;font-size:14px;color:#dce5fa}}
+    body.focus .stats{{grid-template-columns:repeat(2,1fr)}} body.focus .topbar{{display:none}} body.focus .driverwrap{{padding:12px;min-height:100vh;grid-template-rows:auto 1fr}} body.focus .hero{{min-height:44vh;align-items:end}} body.focus .hero-sub{{max-width:18ch}}
+    .pitwrap{{display:none;padding:14px}} body.pit .driverwrap{{display:none}} body.pit .pitwrap{{display:block}} .pitgrid{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}} .field{{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:16px}} .field label{{display:block;margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}} .field input,.field select{{width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--panel-strong);color:var(--text);font-size:18px}} .span2{{grid-column:1 / -1}}
+    .quick{{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}} .quick button,.actions button{{appearance:none;border:none;border-radius:18px;padding:16px 10px;font-size:18px;font-weight:900;color:#fff;cursor:pointer}} .q-blue{{background:linear-gradient(135deg,#214fb2,#4e84f0)}} .q-red{{background:linear-gradient(135deg,#c8151c,#ff5058)}} .q-white{{background:linear-gradient(135deg,#9098aa,#d6dbe7);color:#0b1020}} .q-gold{{background:linear-gradient(135deg,#cf8f16,#ffd25c);color:#241600}} .q-green{{background:linear-gradient(135deg,#198a54,#3ce09a);color:#03160e}}
+    .actions{{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}} .actions button{{background:rgba(255,255,255,.06);border:1px solid var(--line)}}
+    @media (max-width:860px){{.stats{{grid-template-columns:repeat(2,1fr)}} .pitgrid{{grid-template-columns:1fr}} .quick{{grid-template-columns:repeat(2,1fr)}} .topbar{{align-items:flex-start;gap:10px;flex-direction:column}} .controls{{width:100%;justify-content:flex-start}} .meta{{white-space:normal}} }}
+    @media (max-width:560px){{.hero{{grid-template-columns:1fr}} .mode-chip{{justify-self:start}} .stats{{grid-template-columns:1fr 1fr}} .value{{font-size:34px}} .hero-value{{font-size:clamp(64px,22vw,124px)}}}}
+  </style>
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    import {{ initializeApp }} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import {{ getDatabase, ref, onValue, set }} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
+    const qs = id => document.getElementById(id);
     const pageKey = 'quali';
-    const pageTitle = 'Quali';
+    const modeLabel = 'QUALI';
     const params = new URLSearchParams(location.search);
     const room = params.get('room') || 'oldenzaal';
     const isPit = params.get('pit') === '1';
     const isFocus = params.get('focus') !== '0' && !isPit;
-    const storageKey = 'race_dash_' + pageKey + '_' + room;
-    const defaults = {
-      headline: 'READY',
-      headlineSub: 'Wachten op update',
-      primary: '',
-      gap: '',
-      target: '',
-      room: room,
-      updatedAt: '',
-      coach: '',
-      statusColor: 'gold'
-    };
-
     let live = false;
     let dbRef = null;
-
-    const colors = { gold: 'var(--gold)', green: 'var(--green)', red: 'var(--danger)', blue: 'var(--accent)' };
-
-    function qs(id) { return document.getElementById(id); }
-    function readLocal() { try { return JSON.parse(localStorage.getItem(storageKey)) || {...defaults}; } catch { return {...defaults}; } }
-    function saveLocal(data) { localStorage.setItem(storageKey, JSON.stringify(data)); }
-    function syncStatus(text) { document.querySelectorAll('[data-sync]').forEach(el => el.textContent = text); }
-    function timeLabel(iso) { return iso ? new Date(iso).toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '--:--'; }
-
-    function render(data) {
-      const safe = { ...defaults, ...data };
-      qs('heroValue').textContent = safe.headline || 'READY';
-      qs('heroSub').textContent = safe.headlineSub || 'Wachten op update';
-      qs('modeChip').textContent = pageTitle.toUpperCase();
-      qs('primaryValue').textContent = safe.primary || '—';
-      qs('gapValue').textContent = safe.gap || '—';
-      qs('targetValue').textContent = safe.target || '—';
-      qs('roomValue').textContent = safe.room || room;
-      qs('coachValue').textContent = safe.coach || 'Live update';
-      qs('updatedValue').textContent = timeLabel(safe.updatedAt);
-      qs('heroValue').style.color = colors[safe.statusColor] || 'var(--gold)';
-      document.querySelectorAll('[data-updated]').forEach(el => el.textContent = timeLabel(safe.updatedAt));
-
-      if (isPit) {
-        ['headline','headlineSub','primary','gap','target','coach','room'].forEach(key => {
-          const el = qs('inp_' + key);
-          if (el && document.activeElement !== el) el.value = safe[key] || '';
-        });
-        const statusSel = qs('inp_statusColor');
-        if (statusSel && document.activeElement !== statusSel) statusSel.value = safe.statusColor || 'gold';
-      }
-    }
-
-    function collect() {
-      return {
-        headline: qs('inp_headline')?.value.trim() || '',
-        headlineSub: qs('inp_headlineSub')?.value.trim() || '',
-        primary: qs('inp_primary')?.value.trim() || '',
-        gap: qs('inp_gap')?.value.trim() || '',
-        target: qs('inp_target')?.value.trim() || '',
-        coach: qs('inp_coach')?.value.trim() || '',
-        room: qs('inp_room')?.value.trim() || room,
-        statusColor: qs('inp_statusColor')?.value || 'gold',
-        updatedAt: new Date().toISOString()
-      };
-    }
-
-    async function writeData(data) {
-      saveLocal(data);
-      render(data);
-      if (live && dbRef) await set(dbRef, data);
-      else syncStatus('sync lokaal');
-    }
-
+    let connectionTimer = null;
+    const defaults = {{ room, headline:'READY', headlineSub:'Wachten op update vanaf pitwall', primary:'—', gap:'—', target:'—', note:'Laatste update', updatedAt:new Date().toISOString(), color:'blue' }};
+    function saveLocal(data) {{ localStorage.setItem('race_' + pageKey + '_' + room, JSON.stringify(data)); }}
+    function readLocal() {{ try {{ return JSON.parse(localStorage.getItem('race_' + pageKey + '_' + room)) || 'null') || defaults; }} catch {{ return defaults; }} }}
+    function statusTheme(state, text) {{ document.querySelectorAll('[data-sync-text]').forEach(el=>el.textContent=text); document.querySelectorAll('[data-sync-state]').forEach(el=>{{ const map={{connecting:'#f0b43c',live:'#39d98a',offline:'#ff5c63'}}; el.style.background=map[state]||map.connecting; el.style.boxShadow='0 0 0 4px '+(state==='live'?'rgba(57,217,138,.14)':state==='offline'?'rgba(255,92,99,.14)':'rgba(240,180,60,.14)'); }}); }}
+    function updatedClock(ts) {{ const d = ts ? new Date(ts) : new Date(); return isNaN(d) ? '--:--' : d.toLocaleTimeString('nl-NL', {{hour:'2-digit', minute:'2-digit'}}); }}
+    function colorFor(name) {{ return {{red:'var(--red)',blue:'var(--blue)',gold:'var(--gold)',white:'var(--white)',green:'var(--green)'}}[name] || 'var(--gold)'; }}
+    function render(data) {{
+      qs('roomMeta').textContent = room; qs('roomValue').textContent = room; qs('updatedValue').textContent = updatedClock(data.updatedAt); document.querySelectorAll('[data-updated]').forEach(el=>el.textContent = updatedClock(data.updatedAt));
+      qs('heroValue').textContent = data.headline || 'READY'; qs('heroSub').textContent = data.headlineSub || 'Wachten op update'; qs('primaryValue').textContent = data.primary || '—'; qs('gapValue').textContent = data.gap || '—'; qs('targetValue').textContent = data.target || '—'; qs('bestNote').textContent = data.note || 'Live update';
+      qs('heroValue').style.color = colorFor(data.color);
+      if (isPit) {{ qs('inp_room').value = data.room || room; qs('inp_headline').value = data.headline || ''; qs('inp_headlineSub').value = data.headlineSub || ''; qs('inp_primary').value = data.primary || ''; qs('inp_gap').value = data.gap || ''; qs('inp_target').value = data.target || ''; qs('inp_note').value = data.note || ''; qs('inp_statusColor').value = data.color || 'blue'; }}
+    }}
+    function collect() {{ return {{ room: qs('inp_room').value.trim() || room, headline: qs('inp_headline').value.trim() || 'READY', headlineSub: qs('inp_headlineSub').value.trim() || 'Wachten op update vanaf pitwall', primary: qs('inp_primary').value.trim() || '—', gap: qs('inp_gap').value.trim() || '—', target: qs('inp_target').value.trim() || '—', note: qs('inp_note').value.trim() || 'Live update', updatedAt: new Date().toISOString(), color: qs('inp_statusColor').value || 'blue' }}; }}
+    async function writeData(data) {{ saveLocal(data); render(data); if (live && dbRef) await set(dbRef, data); }}
     window.submitForm = () => writeData(collect());
-    window.applyQuick = (headline, sub, color='gold') => {
-      qs('inp_headline').value = headline;
-      qs('inp_headlineSub').value = sub;
-      qs('inp_statusColor').value = color;
-      writeData(collect());
-    };
-    window.resetForm = () => writeData({...defaults, room, updatedAt: new Date().toISOString()});
-    window.toggleFullscreen = async () => {
-      if (!document.fullscreenElement) {
-        try { await document.documentElement.requestFullscreen(); } catch (e) { console.error(e); }
-      } else {
-        await document.exitFullscreen();
-      }
-    };
-
-    async function init() {
-      document.body.classList.toggle('pit', isPit);
-      document.body.classList.toggle('focus', isFocus);
-      qs('roomMeta').textContent = room;
-      qs('switchLink').href = (() => { const u = new URL(location.href); if (isPit) u.searchParams.delete('pit'); else u.searchParams.set('pit','1'); return u.toString(); })();
+    window.applyQuick = (headline, sub, color='blue') => {{ qs('inp_headline').value = headline; qs('inp_headlineSub').value = sub; qs('inp_statusColor').value = color; writeData(collect()); }};
+    window.resetForm = () => writeData({{...defaults, updatedAt:new Date().toISOString()}});
+    window.toggleFullscreen = async () => {{ if (!document.fullscreenElement) {{ try {{ await document.documentElement.requestFullscreen(); }} catch(e) {{ console.error(e); }} }} else {{ await document.exitFullscreen(); }} }};
+    async function init() {{
+      document.body.classList.toggle('pit', isPit); document.body.classList.toggle('focus', isFocus);
+      qs('modeChip').textContent = modeLabel;
+      qs('switchLink').href = (() => {{ const u = new URL(location.href); if (isPit) u.searchParams.delete('pit'); else u.searchParams.set('pit','1'); return u.toString(); }})();
       qs('switchLink').textContent = isPit ? 'Open driver' : 'Open pitwall';
-      qs('focusLink').href = (() => { const u = new URL(location.href); if (u.searchParams.get('focus') === '0') u.searchParams.delete('focus'); else u.searchParams.set('focus','0'); return u.toString(); })();
-      qs('focusLink').textContent = isPit ? 'Driver preview' : (isFocus ? 'Toon volledige view' : 'Focus mode');
-
-      const local = readLocal();
-      render(local);
-      if (isPit) qs('inp_room').value = local.room || room;
-
+      qs('focusLink').href = (() => {{ const u = new URL(location.href); if (u.searchParams.get('focus') === '0') u.searchParams.delete('focus'); else u.searchParams.set('focus','0'); return u.toString(); }})();
+      qs('focusLink').textContent = isPit ? 'Driver preview' : (isFocus ? 'Volledige view' : 'Focus mode');
+      const local = readLocal(); render(local); statusTheme('connecting','Verbinden...');
+      connectionTimer = setTimeout(() => {{ if (!live) statusTheme('offline','Offline · lokale fallback'); }}, 3500);
       const cfg = window.RACE_FIREBASE_CONFIG;
-      if (cfg && cfg.databaseURL) {
-        try {
-          const app = initializeApp(cfg, pageKey + '_' + room);
+      if (cfg && cfg.databaseURL) {{
+        try {{
+          const app = initializeApp(cfg, pageKey + '_' + room + '_' + Math.random().toString(36).slice(2,7));
           const db = getDatabase(app);
           dbRef = ref(db, 'rooms/' + room + '/' + pageKey);
-          onValue(dbRef, snap => {
-            const data = snap.val() || local || defaults;
-            saveLocal(data);
-            render(data);
-          });
-          live = true;
-          syncStatus('Firebase live');
-        } catch (e) {
-          console.error(e);
-          syncStatus('sync lokaal');
-        }
-      } else {
-        syncStatus('sync lokaal');
-      }
-    }
-
+          onValue(dbRef, snap => {{ const data = snap.val() || local || defaults; saveLocal(data); render(data); live = true; clearTimeout(connectionTimer); statusTheme('live','Live verbonden'); }}, err => {{ console.error(err); clearTimeout(connectionTimer); statusTheme('offline','Offline · lokale fallback'); }});
+        }} catch (e) {{ console.error(e); clearTimeout(connectionTimer); statusTheme('offline','Offline · lokale fallback'); }}
+      }} else {{ clearTimeout(connectionTimer); statusTheme('offline','Offline · lokale fallback'); }}
+    }}
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </head>
@@ -200,32 +85,35 @@
   <div class="app">
     <div class="topbar">
       <div class="brand">
-        <div class="eyebrow">Driver dashboard</div>
-        <div class="title">Quali</div>
-        <div class="meta">room <strong id="roomMeta"></strong> · <span data-sync>sync lokaal</span> · update <span data-updated>--:--</span></div>
+        <img src="./team-logo.jpg" alt="Team Endurance NL logo">
+        <div class="brandcopy">
+          <div class="eyebrow">Team Endurance NL</div>
+          <div class="title">Quali</div>
+          <div class="meta"><span class="statuspill"><span class="statusdot" data-sync-state></span><span data-sync-text>Verbinden...</span></span> room <strong id="roomMeta"></strong> · update <span data-updated>--:--</span></div>
+        </div>
       </div>
       <div class="controls">
-        <a class="btn ghost" id="focusLink" href="#">Focus mode</a>
-        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
-        <a class="btn" id="switchLink" href="#">Open pitwall</a>
+        <a class="btn" href="./index.html">Home</a>
+        <a class="btn" id="focusLink" href="#">Focus mode</a>
+        <button class="btn primary" onclick="toggleFullscreen()">Fullscreen</button>
+        <a class="btn alert" id="switchLink" href="#">Open pitwall</a>
       </div>
     </div>
 
-    <div class="screen driverwrap">
+    <div class="driverwrap">
       <section class="hero">
         <div>
-          <div class="hero-label">Status</div>
+          <div class="hero-label">Driver status</div>
           <div class="hero-value" id="heroValue">READY</div>
-          <div class="hero-sub" id="heroSub">Wachten op update</div>
+          <div class="hero-sub" id="heroSub">Wachten op update vanaf pitwall</div>
         </div>
         <div class="mode-chip" id="modeChip">QUALI</div>
       </section>
-
-      <section class="grid">
+      <section class="stats">
         <article class="card">
-          <div class="label">Mijn beste ronde</div>
+          <div class="label">Beste ronde</div>
           <div class="value" id="primaryValue">—</div>
-          <div class="note" id="coachValue">Live update</div>
+          <div class="note" id="bestNote">Live update</div>
         </article>
         <article class="card">
           <div class="label">Gap</div>
@@ -245,63 +133,60 @@
       </section>
     </div>
 
-    <div class="screen pitwrap">
+    <div class="pitwrap">
       <div class="pitgrid">
+        <div class="field span2">
+          <div class="quick">
+            <button class="q-blue" onclick="applyQuick('PUSH','Vol vermogen. Maximale attack deze stint.','blue')">PUSH</button>
+            <button class="q-red" onclick="applyQuick('BOX','Kom deze ronde binnen.','red')">BOX</button>
+            <button class="q-white" onclick="applyQuick('SAVE','Spaar banden en hou marge.','white')">SAVE</button>
+            <button class="q-green" onclick="applyQuick('COOL','Reset, koel hoofd en banden.','green')">COOL</button>
+            <button class="q-gold" onclick="applyQuick('ATTACK','Vrije ronde. Nu direct pushen.','gold')">ATTACK</button>
+          </div>
+        </div>
         <div class="field">
-          <label for="inp_headline">Grote status</label>
-          <input id="inp_headline" placeholder="LAST / PUSH / BOX / COOL">
+          <label for="inp_room">Room</label>
+          <input id="inp_room" placeholder="oldenzaal">
         </div>
         <div class="field">
           <label for="inp_statusColor">Status kleur</label>
           <select id="inp_statusColor">
-            <option value="gold">Geel</option>
+            <option value="blue">Team blauw</option>
+            <option value="red">Team rood</option>
+            <option value="white">Wit</option>
+            <option value="gold">Goud</option>
             <option value="green">Groen</option>
-            <option value="red">Rood</option>
-            <option value="blue">Blauw</option>
           </select>
         </div>
         <div class="field span2">
-          <label for="inp_headlineSub">Subtekst onder status</label>
-          <input id="inp_headlineSub" placeholder="Laatste kans ronde / Pit this lap / Fuel save">
+          <label for="inp_headline">Grote status</label>
+          <input id="inp_headline" placeholder="PUSH / BOX / LAST / SAVE">
+        </div>
+        <div class="field span2">
+          <label for="inp_headlineSub">Subtekst</label>
+          <input id="inp_headlineSub" placeholder="Korte duidelijke instructie voor driver">
         </div>
         <div class="field">
-          <label for="inp_primary">Mijn beste ronde</label>
-          <input id="inp_primary" placeholder="52.341 of P3">
+          <label for="inp_primary">Beste ronde</label>
+          <input id="inp_primary" placeholder="51.982">
         </div>
         <div class="field">
           <label for="inp_gap">Gap</label>
-          <input id="inp_gap" placeholder="+0.182">
+          <input id="inp_gap" placeholder="+0.24">
         </div>
         <div class="field">
           <label for="inp_target">Target lap</label>
-          <input id="inp_target" placeholder="51.990">
+          <input id="inp_target" placeholder="52.200">
         </div>
         <div class="field">
-          <label for="inp_room">Room naam</label>
-          <input id="inp_room" placeholder="oldenzaal">
+          <label for="inp_note">Opmerking</label>
+          <input id="inp_note" placeholder="Track evolueert / tyres ok / fuel save">
         </div>
-        <div class="field span2">
-          <label for="inp_coach">Kleine notitie</label>
-          <textarea id="inp_coach" placeholder="Banden op temperatuur / lijn netjes houden"></textarea>
-        </div>
-        <div class="field span2">
-          <label>Snelle knoppen</label>
-          <div class="quick">
-            <button onclick="applyQuick('LAST','Laatste kans ronde','gold')">LAST</button>
-            <button onclick="applyQuick('PUSH','Push this lap','green')">PUSH</button>
-            <button onclick="applyQuick('BOX','Pit this lap','red')">BOX</button>
-            <button onclick="applyQuick('SAVE','Fuel save','blue')">SAVE</button>
-            <button onclick="applyQuick('COOL','Cool tyres','blue')">COOL</button>
-          </div>
-        </div>
-        <div class="field span2">
-          <div class="quick">
-            <button class="primary" onclick="submitForm()">Verstuur update</button>
-            <button onclick="resetForm()">Reset</button>
-            <button onclick="toggleFullscreen()">Fullscreen preview</button>
-          </div>
-          <div class="footer">Driver hoeft niets te bedienen. Focus mode toont alleen de belangrijkste info.</div>
-        </div>
+      </div>
+      <div class="actions">
+        <button onclick="submitForm()">Verstuur update</button>
+        <button onclick="resetForm()">Reset</button>
+        <button onclick="toggleFullscreen()">Fullscreen</button>
       </div>
     </div>
   </div>
