@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/apex.js": {
-      "maxDuration": 10
-    }
-  }
-}
