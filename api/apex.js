@@ -1,9 +1,6 @@
-export default async function handler(req, res) {
-
+export default async (req, res) => {
   try {
-
-    let init = req.query.init || 0
-    let index = req.query.index || 0
+    let { init = 0, index = 0 } = req.query
 
     let url = `https://www.apex-timing.com/live-timing/kartbaanoldenzaal/commonv2/functions/live_ajax.php?init=${init}&index=${index}`
 
@@ -15,9 +12,7 @@ export default async function handler(req, res) {
 
     const text = await response.text()
 
-    // CORS fix
     res.setHeader("Access-Control-Allow-Origin", "*")
-
     res.status(200).send(text)
 
   } catch (e) {
