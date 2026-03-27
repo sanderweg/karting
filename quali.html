@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Race Control • Qualifying</title>
+  <style>
+    :root{
+      --bg:#071019;
+      --panel:#101a28;
+      --panel-2:#162234;
+      --line:#233249;
+      --text:#f5f7fb;
+      --muted:#94a3b8;
+      --accent:#3b82f6;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:26px;
+      --shadow:0 20px 55px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);
+      background:radial-gradient(circle at top, rgba(59,130,246,.16), transparent 33%), linear-gradient(180deg,#05080d,#0b131d);
+      min-height:100vh;
+    }
+    .layout{display:grid;grid-template-columns:1fr;gap:16px;padding:16px;min-height:100vh}
+    .topbar,.card,.panel{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .topbar{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;flex-direction:column;gap:6px}
+    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#c6d2e3}
+    .title{font-size:clamp(28px,6vw,52px);font-weight:900;line-height:1}
+    .meta{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:13px;color:#d6def0}
+    .main{display:grid;grid-template-columns:1fr;gap:16px}
+    .hero{padding:20px}
+    .heroGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .metric{padding:18px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .metricLabel{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .metricValue{font-size:clamp(34px,9vw,68px);font-weight:900;line-height:1.02}
+    .metricValue.small{font-size:clamp(26px,6vw,42px)}
+    .bottom{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    .card{padding:18px}
+    .card h2{margin:0 0 14px 0;font-size:16px;color:#d9e3f2;letter-spacing:.06em;text-transform:uppercase}
+    .statusBox{display:flex;align-items:center;justify-content:center;min-height:128px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:clamp(26px,6vw,46px);font-weight:900;text-align:center;padding:16px}
+    .notes{font-size:clamp(20px,4vw,28px);line-height:1.35;color:#eef3fb;min-height:92px;white-space:pre-wrap}
+    .panel{padding:18px;display:none}
+    body.pit .panel{display:block}
+    .panelGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .field{display:flex;flex-direction:column;gap:8px}
+    .field.full{grid-column:1 / -1}
+    label{font-size:13px;color:var(--muted)}
+    input,select,textarea{
+      width:100%;background:#0b1320;border:1px solid var(--line);color:var(--text);
+      border-radius:16px;padding:14px 14px;font-size:16px;font-family:inherit
+    }
+    textarea{min-height:100px;resize:vertical}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    button{border:none;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:700;cursor:pointer}
+    .primary{background:var(--accent);color:white}
+    .ghost{background:#111a28;color:#dce6f5;border:1px solid var(--line)}
+    .good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+    .footerHint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.55}
+    @media (max-width:900px){.bottom{grid-template-columns:1fr}.heroGrid{grid-template-columns:1fr 1fr}}
+    @media (max-width:640px){.layout{padding:10px}.topbar,.card,.panel,.hero{border-radius:22px}.heroGrid{grid-template-columns:1fr}.panelGrid{grid-template-columns:1fr}.title{font-size:30px}.metricValue{font-size:42px}.notes{font-size:22px}}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Race Control • Qualifying</div>
+        <div class="title">QUALI</div>
+      </div>
+      <div class="meta">
+        <div class="chip" id="roomChip">room: default</div>
+        <div class="chip" id="modeChip">driver mode</div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="hero card">
+        <div class="heroGrid">
+          <div class="metric">
+            <div class="metricLabel">Best lap</div>
+            <div class="metricValue" id="bestLap">--.---</div>
+          </div>
+          <div class="metric">
+            <div class="metricLabel">Gap to target</div>
+            <div class="metricValue" id="gapTarget">+0.000</div>
+          </div>
+          <div class="metric">
+            <div class="metricLabel">Track best</div>
+            <div class="metricValue small" id="trackBest">--.---</div>
+          </div>
+          <div class="metric">
+            <div class="metricLabel">Current call</div>
+            <div class="metricValue small" id="callText">BUILD</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bottom">
+        <section class="card">
+          <h2>Engineer message</h2>
+          <div class="statusBox" id="statusText">READY FOR PUSH</div>
+        </section>
+        <section class="card">
+          <h2>Focus</h2>
+          <div class="notes" id="notes">Warm tyres. Build the lap. Minimum steering input.</div>
+        </section>
+      </section>
+
+      <aside class="panel">
+        <h2 style="margin:0 0 14px 0;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:#d9e3f2">Pitwall control</h2>
+        <div class="panelGrid">
+          <div class="field"><label>Room</label><input id="roomInput" placeholder="bijv. teamA"></div>
+          <div class="field"><label>Driver / kart</label><input id="driverName" placeholder="bijv. Kart 12"></div>
+          <div class="field"><label>Best lap</label><input id="bestLapInput" placeholder="52.381"></div>
+          <div class="field"><label>Track best</label><input id="trackBestInput" placeholder="51.992"></div>
+          <div class="field"><label>Gap to target</label><input id="gapTargetInput" placeholder="+0.389"></div>
+          <div class="field"><label>Current call</label>
+            <select id="callTextInput"><option>PUSH</option><option>BUILD</option><option>COOL</option><option>ABORT</option></select>
+          </div>
+          <div class="field"><label>Status</label>
+            <select id="statusInput"><option>READY FOR PUSH</option><option>PUSH THIS LAP</option><option>BUILD GAP</option><option>COOL TYRES</option><option>ABORT LAP</option></select>
+          </div>
+          <div class="field full"><label>Focus / notes</label><textarea id="notesInput" placeholder="Korte instructie voor de driver"></textarea></div>
+        </div>
+        <div class="actions">
+          <button class="primary" id="saveBtn">Opslaan / live push</button>
+          <button class="ghost" id="resetBtn">Reset</button>
+          <button class="ghost" id="copyDriverLinkBtn">Kopieer driver link</button>
+        </div>
+        <div class="footerHint">Firebase live sync werkt zodra je je eigen config invult in <strong>FIREBASE_CONFIG</strong>. Zonder Firebase gebruikt de pagina alleen lokale fallback voor testen op hetzelfde apparaat.</div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module">
+    const DEFAULT_STATE = {
+      driverName: 'Driver',
+      bestLap: '--.---',
+      trackBest: '--.---',
+      gapTarget: '+0.000',
+      callText: 'BUILD',
+      statusText: 'READY FOR PUSH',
+      notes: 'Warm tyres. Build the lap. Minimum steering input.'
+    };
+
+    const FIREBASE_CONFIG = {
+      apiKey: '',
+      authDomain: '',
+      databaseURL: '',
+      projectId: '',
+      storageBucket: '',
+      messagingSenderId: '',
+      appId: ''
+    };
+
+    const params = new URLSearchParams(location.search);
+    const isPit = params.get('pit') === '1';
+    let room = params.get('room') || 'default';
+    const pageKey = 'quali';
+    const storageKey = `race_dash_${pageKey}_${room}`;
+
+    document.body.classList.toggle('pit', isPit);
+    document.getElementById('modeChip').textContent = isPit ? 'pitwall mode' : 'driver mode';
+    document.getElementById('roomChip').textContent = `room: ${room}`;
+
+    const ui = {
+      bestLap: document.getElementById('bestLap'),
+      trackBest: document.getElementById('trackBest'),
+      gapTarget: document.getElementById('gapTarget'),
+      callText: document.getElementById('callText'),
+      statusText: document.getElementById('statusText'),
+      notes: document.getElementById('notes'),
+      roomInput: document.getElementById('roomInput'),
+      driverName: document.getElementById('driverName'),
+      bestLapInput: document.getElementById('bestLapInput'),
+      trackBestInput: document.getElementById('trackBestInput'),
+      gapTargetInput: document.getElementById('gapTargetInput'),
+      callTextInput: document.getElementById('callTextInput'),
+      statusInput: document.getElementById('statusInput'),
+      notesInput: document.getElementById('notesInput'),
+      saveBtn: document.getElementById('saveBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      copyDriverLinkBtn: document.getElementById('copyDriverLinkBtn')
+    };
+
+    function scoreClass(value){
+      const t = String(value).toUpperCase();
+      if (t.includes('PUSH') || t.includes('READY')) return 'good';
+      if (t.includes('BUILD') || t.includes('COOL')) return 'warn';
+      if (t.includes('ABORT')) return 'bad';
+      return '';
+    }
+
+    function applyState(state){
+      ui.bestLap.textContent = state.bestLap || DEFAULT_STATE.bestLap;
+      ui.trackBest.textContent = state.trackBest || DEFAULT_STATE.trackBest;
+      ui.gapTarget.textContent = state.gapTarget || DEFAULT_STATE.gapTarget;
+      ui.callText.textContent = state.callText || DEFAULT_STATE.callText;
+      ui.statusText.textContent = state.statusText || DEFAULT_STATE.statusText;
+      ui.notes.textContent = state.notes || DEFAULT_STATE.notes;
+      ui.statusText.className = `statusBox ${scoreClass(state.statusText)}`.trim();
+      ui.callText.className = `metricValue small ${scoreClass(state.callText)}`.trim();
+      if (isPit){
+        ui.roomInput.value = room;
+        ui.driverName.value = state.driverName || '';
+        ui.bestLapInput.value = state.bestLap || '';
+        ui.trackBestInput.value = state.trackBest || '';
+        ui.gapTargetInput.value = state.gapTarget || '';
+        ui.callTextInput.value = state.callText || 'BUILD';
+        ui.statusInput.value = state.statusText || 'READY FOR PUSH';
+        ui.notesInput.value = state.notes || '';
+      }
+      document.title = `${state.driverName || 'Driver'} • Qualifying`;
+    }
+
+    function readLocal(){
+      try { return JSON.parse(localStorage.getItem(storageKey)) || DEFAULT_STATE; }
+      catch { return DEFAULT_STATE; }
+    }
+
+    function writeLocal(state){ localStorage.setItem(storageKey, JSON.stringify(state)); }
+
+    const hasFirebase = Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.projectId);
+    let dbRef = null;
+
+    async function initFirebase(){
+      if (!hasFirebase) return null;
+      const [{ initializeApp }, { getDatabase, ref, onValue, set }] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js')
+      ]);
+      const app = initializeApp(FIREBASE_CONFIG);
+      const db = getDatabase(app);
+      dbRef = ref(db, `dashboards/${room}/${pageKey}`);
+      onValue(dbRef, snap => applyState({ ...DEFAULT_STATE, ...(snap.val() || readLocal()) }));
+      return { set };
+    }
+
+    let firebaseApi = null;
+    initFirebase().then(api => { firebaseApi = api; }).catch(() => applyState(readLocal()));
+
+    applyState(readLocal());
+    window.addEventListener('storage', (e) => { if (e.key === storageKey) applyState(readLocal()); });
+
+    function collectState(){
+      return {
+        driverName: ui.driverName.value || 'Driver',
+        bestLap: ui.bestLapInput.value || '--.---',
+        trackBest: ui.trackBestInput.value || '--.---',
+        gapTarget: ui.gapTargetInput.value || '+0.000',
+        callText: ui.callTextInput.value || 'BUILD',
+        statusText: ui.statusInput.value || 'READY FOR PUSH',
+        notes: ui.notesInput.value || DEFAULT_STATE.notes
+      };
+    }
+
+    if (isPit){
+      ui.saveBtn.addEventListener('click', async () => {
+        const requestedRoom = (ui.roomInput.value || 'default').trim();
+        if (requestedRoom !== room) {
+          const url = new URL(location.href);
+          url.searchParams.set('room', requestedRoom);
+          url.searchParams.set('pit', '1');
+          location.href = url.toString();
+          return;
+        }
+        const next = collectState();
+        writeLocal(next);
+        applyState(next);
+        if (firebaseApi?.set && dbRef) await firebaseApi.set(dbRef, next);
+      });
+
+      ui.resetBtn.addEventListener('click', async () => {
+        writeLocal(DEFAULT_STATE);
+        applyState(DEFAULT_STATE);
+        if (firebaseApi?.set && dbRef) await firebaseApi.set(dbRef, DEFAULT_STATE);
+      });
+
+      ui.copyDriverLinkBtn.addEventListener('click', async () => {
+        const targetRoom = (ui.roomInput.value || room || 'default').trim();
+        const url = new URL(location.href);
+        url.searchParams.delete('pit');
+        url.searchParams.set('room', targetRoom);
+        await navigator.clipboard.writeText(url.toString());
+        ui.copyDriverLinkBtn.textContent = 'Driver link gekopieerd';
+        setTimeout(() => ui.copyDriverLinkBtn.textContent = 'Kopieer driver link', 1800);
+      });
+    }
+  </script>
+</body>
+</html>
