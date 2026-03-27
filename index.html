@@ -1,28 +1,20 @@
-<script src="core.js"></script>
-
-<select id="kartSelect"></select>
+<iframe 
+  id="apexFrame"
+  src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"
+  style="width:100%; height:500px;">
+</iframe>
 
 <script>
-async function loadKarts() {
+setTimeout(() => {
+  try {
+    let frame = document.getElementById("apexFrame")
 
-  let raw = await getData()
-  let rows = getRows(raw)
+    let doc = frame.contentWindow.document
 
-  let select = document.getElementById("kartSelect")
-  select.innerHTML = ""
+    console.log("DOC:", doc)
 
-  if (rows.length === 0) {
-    select.innerHTML = "<option>Geen karts gevonden</option>"
-    return
+  } catch(e) {
+    console.log("❌ Cross-origin block")
   }
-
-  rows.forEach(r => {
-    let opt = document.createElement("option")
-    opt.value = r.kart
-    opt.text = "Kart " + r.kart + " (" + r.name + ")"
-    select.appendChild(opt)
-  })
-}
-
-loadKarts()
+}, 3000)
 </script>
