@@ -1,54 +1,309 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quali Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Quali</title>
   <style>
-    :root{--panel:#0d1324;--panel2:#141b31;--line:rgba(255,255,255,.08);--text:#f6f8ff;--muted:#95a0bf;--accent:#77a8ff;--good:#67ffb3;--warn:#ffd166;--bad:#ff6b81;--shadow:0 20px 60px rgba(0,0,0,.45)}
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(119,168,255,.16), transparent 28%),linear-gradient(180deg,#070b18 0%,#05070f 100%)}
-    .shell{max-width:1200px;margin:0 auto;padding:16px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;padding:14px 16px;border:1px solid var(--line);background:rgba(10,15,30,.82);backdrop-filter:blur(10px);border-radius:20px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:20}.brand h1{margin:0;font-size:26px}.brand p{margin:6px 0 0;color:var(--muted);font-size:13px}.meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#0b1020;color:var(--muted);font-size:13px}
-    .layout{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow)}.driverCard{padding:20px;min-height:calc(100vh - 140px);display:flex;flex-direction:column;justify-content:space-between}.sectionTitle{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.heroValue{font-size:clamp(34px,9vw,82px);font-weight:800;line-height:.95;margin:12px 0 0;letter-spacing:-.04em}.heroLabel{font-size:18px;color:var(--muted);margin-top:10px}.statusBar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)}.statusMain{font-size:clamp(28px,7vw,54px);font-weight:800;line-height:1}.statusSub{color:var(--muted);font-size:14px;margin-top:6px}.statusFlag{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;color:var(--muted);min-width:110px;text-align:center}
-    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.metric{padding:16px;border-radius:22px;background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid var(--line)}.metric .label{font-size:13px;color:var(--muted);margin-bottom:10px}.metric .value{font-size:clamp(24px,5vw,42px);font-weight:750;line-height:1.05}.metric .sub{margin-top:8px;color:var(--muted);font-size:12px}.pitCard{padding:18px;display:flex;flex-direction:column;gap:14px}.pitHeader{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.pitHeader h2{margin:0;font-size:24px}.pitHeader p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
-    .switches{display:flex;flex-wrap:wrap;gap:8px} button,.linkBtn{appearance:none;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:15px;padding:12px 14px;font-size:14px;font-weight:700}.primary{background:linear-gradient(135deg,var(--accent),#9cc4ff);color:#081221}.secondary{background:#0a1120;color:var(--text);border:1px solid var(--line)}.danger{background:rgba(255,107,129,.12);color:#ffd6de;border:1px solid rgba(255,107,129,.28)}
-    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:13px;color:var(--muted)}.field input,.field textarea{width:100%;background:#09101d;color:var(--text);border:1px solid var(--line);border-radius:16px;padding:14px;font-size:16px;font-family:inherit}.field textarea{min-height:92px;resize:vertical}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quick button{min-height:48px;background:#0a1120;color:var(--text);border:1px solid var(--line)}.footerNote{color:var(--muted);font-size:12px;line-height:1.5}.hidePit .pitCol{display:none}.hidePit .layout{grid-template-columns:1fr}.hidePit .driverCard{min-height:calc(100vh - 95px)}.green{color:var(--good)!important}.yellow{color:var(--warn)!important}.red{color:var(--bad)!important}
-    @media (max-width:900px){.layout,.formGrid{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}.topbar{align-items:flex-start;flex-direction:column}.meta{justify-content:flex-start}}
+    :root{--bg:#06102a;--bg2:#020713;--panel:rgba(18,30,64,.74);--panel-strong:rgba(14,24,52,.92);--border:rgba(255,255,255,.09);--text:#f6f8ff;--muted:#9ab0de;--accent:#7fb0ff;--gold:#ffd364;--green:#71f0a7;--danger:#ff7f7f;--shadow:0 20px 50px rgba(0,0,0,.35)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#132a62 0%,#07142f 38%,#020713 100%);color:var(--text)}
+    body{padding:0;}
+    .app{min-height:100vh;display:grid;grid-template-rows:auto 1fr;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(180deg,rgba(2,7,19,.72),rgba(2,7,19,.26));backdrop-filter:blur(10px)}
+    .brand{display:flex;flex-direction:column;gap:4px}
+    .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+    .title{font-size:24px;font-weight:800;letter-spacing:.02em}
+    .meta{font-size:12px;color:var(--muted)}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .btn{appearance:none;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);border-radius:14px;padding:12px 14px;font-weight:600;text-decoration:none;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg,#2b6fff,#1749c8);border-color:rgba(255,255,255,.12)}
+    .btn.ghost{background:rgba(255,255,255,.02)}
+    .screen{padding:16px;display:grid;gap:14px;min-height:0}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:18px 18px 16px;border-radius:26px;background:linear-gradient(135deg,rgba(29,43,86,.82),rgba(11,19,42,.92));border:1px solid var(--border);box-shadow:var(--shadow)}
+    .hero-label{font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:6px}
+    .hero-value{font-size:clamp(52px,15vw,108px);line-height:.9;font-weight:900;color:var(--gold)}
+    .hero-sub{margin-top:8px;font-size:22px;color:#dce6ff}
+    .mode-chip{padding:14px 18px;border-radius:18px;border:1px solid var(--border);font-weight:700;color:var(--accent);background:rgba(255,255,255,.03)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .card{padding:18px;border-radius:22px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+    .label{font-size:14px;color:var(--muted)}
+    .value{font-size:clamp(34px,8vw,62px);font-weight:800;line-height:1.02;word-break:break-word}
+    .note{font-size:14px;color:var(--muted)}
+    .pitwrap{display:none;max-width:900px;margin:0 auto;width:100%}
+    .pitgrid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .field{display:grid;gap:8px;padding:18px;border-radius:22px;background:var(--panel-strong);border:1px solid var(--border)}
+    label{font-size:13px;color:var(--muted)}
+    input,textarea,select{width:100%;padding:14px 16px;background:#091127;color:#fff;border:1px solid var(--border);border-radius:14px;font-size:18px}
+    textarea{min-height:110px;resize:vertical}
+    .span2{grid-column:1/-1}
+    .quick{display:flex;gap:10px;flex-wrap:wrap}
+    .quick button{appearance:none;border:1px solid var(--border);background:rgba(255,255,255,.05);color:#fff;padding:12px 16px;border-radius:14px;font-weight:700;cursor:pointer}
+    .footer{font-size:12px;color:var(--muted)}
+    body.pit .driverwrap{display:none}
+    body.pit .pitwrap{display:block}
+    body.focus .topbar{display:none}
+    body.focus .screen{padding:10px;min-height:100vh;grid-template-rows:auto 1fr}
+    body.focus .hero{padding:16px 16px 12px}
+    body.focus .grid{gap:10px}
+    body.focus .card{min-height:132px;padding:16px}
+    @media (max-width:720px){
+      .topbar{padding:12px}
+      .title{font-size:20px}
+      .controls{gap:6px}
+      .btn{padding:10px 12px;font-size:14px}
+      .screen{padding:12px}
+      .grid,.pitgrid{grid-template-columns:1fr}
+      .hero{grid-template-columns:1fr;align-items:flex-start}
+      .hero-sub{font-size:18px}
+      .card{min-height:128px}
+      body.focus .screen{padding:8px}
+      body.focus .hero-value{font-size:clamp(56px,22vw,110px)}
+      body.focus .value{font-size:clamp(30px,10vw,52px)}
+    }
   </style>
-</head>
-<body>
-  <div class="shell">
-    <div class="topbar">
-      <div class="brand"><h1>Quali</h1><p id="modeText">Driver view · grote leesbare data voor telefoon op stuur</p></div>
-      <div class="meta"><div class="pill" id="roomTag">Room: -</div><div class="pill" id="syncTag">Sync: lokaal</div><button class="secondary" onclick="toggleMode()" id="modeButton">Open pitwall</button><a class="linkBtn secondary" href="index.html">Start</a></div>
-    </div>
-    <div class="layout">
-      <section class="driverCol"><div class="card driverCard"><div><div class="sectionTitle">Mijn beste ronde</div><div class="heroValue" id="heroValue">--</div><div class="heroLabel" id="heroSubtitle">Wacht op pitwall update</div><div class="statusBar"><div><div class="statusMain yellow" id="statusValue">READY</div><div class="statusSub" id="statusNote">Standaard status</div></div><div class="statusFlag">QUALI</div></div><div class="metrics"><div class="metric"><div class="label">Snelste baanronde</div><div class="value" id="trackBestDisplay">--</div><div class="sub" id="trackBestSub">&nbsp;</div></div><div class="metric"><div class="label">Gap</div><div class="value" id="gapDisplay">--</div><div class="sub" id="gapSub">&nbsp;</div></div><div class="metric"><div class="label">Target lap</div><div class="value" id="targetDisplay">--</div><div class="sub" id="targetSub">&nbsp;</div></div><div class="metric"><div class="label">Room</div><div class="value" id="roomDisplay">--</div><div class="sub">gedeelde sessie</div></div></div></div><div class="footerNote">Deze driver view is bewust rustig gehouden: grote cijfers, weinig afleiding en geen invoer nodig voor de coureur.</div></div></section>
-      <aside class="pitCol"><div class="card pitCard"><div class="pitHeader"><div><h2>Pitwall bediening</h2><p>Voer de data hier in. Alles wordt direct doorgestuurd naar de driver view wanneer Firebase is ingesteld.</p></div><div class="switches"><button class="danger" onclick="resetDashboard()">Reset</button></div></div><div class="formGrid"><div class="field"><label for="headline">Mijn beste ronde</label><input id="headline" placeholder="Mijn beste ronde"></div><div class="field"><label for="trackBest">Snelste baanronde</label><input id="trackBest" placeholder="Snelste baanronde"></div><div class="field"><label for="gap">Gap</label><input id="gap" placeholder="Gap"></div><div class="field"><label for="target">Target lap</label><input id="target" placeholder="Target lap"></div><div class="field"><label for="status">Status</label><input id="status" placeholder="bijv. PUSH / BOX / HOLD"></div><div class="field"><label for="note">Engineer note</label><textarea id="note" placeholder="korte extra instructie voor driver"></textarea></div></div><div class="quick"><button onclick="quickStatus('PUSH','Nog 1 ronde pushen')">PUSH</button><button onclick="quickStatus('BUILD','Banden opbouwen')">BUILD</button><button onclick="quickStatus('BOX','Deze ronde boxen')">BOX</button><button onclick="quickStatus('COOL','1 ronde koelen')">COOL</button><button onclick="quickStatus('TRACK','Vrije baan zoeken')">TRACK</button><button onclick="quickStatus('LAST','Laatste kans ronde')">LAST</button></div><div class="switches"><button class="primary" onclick="pushUpdate()">Verstuur update</button><button class="secondary" onclick="fillDemo()">Demo data</button><button class="secondary" onclick="copyLink()">Kopieer driver link</button></div><div class="footerNote">Gebruik dezelfde room op pitwall en driver. Zonder Firebase werkt de demo alleen lokaal in dezelfde browser.</div></div></aside>
-    </div>
-  </div>
-  <script src="firebase-config.js"></script>
+  <script src="./firebase-config.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
-    const PAGE_KEY='quali';
-    const DEFAULTS={headline:'--',trackBest:'--',gap:'--',target:'--',status:'READY',note:''};
-    const DEMO={headline:'41.284',trackBest:'40.991',gap:'+0.293',target:'41.1',status:'PUSH',note:'Nog 2 ronden. Vrije baan zoeken.'};
-    const FIELD_IDS=['headline','trackBest','gap','target'];
-    const params=new URLSearchParams(location.search); const room=(params.get('room')||'team-a').trim().toLowerCase(); let isPit=params.get('pit')==='1'; let firebaseReady=false; let db=null; let state=loadLocal();
-    document.getElementById('roomTag').textContent='Room: '+room; document.getElementById('roomDisplay').textContent=room;
-    function loadLocal(){try{const raw=localStorage.getItem('dash-'+PAGE_KEY+'-'+room);return raw?{...DEFAULTS,...JSON.parse(raw)}:{...DEFAULTS}}catch{return {...DEFAULTS}}}
-    function saveLocal(data){localStorage.setItem('dash-'+PAGE_KEY+'-'+room,JSON.stringify(data))}
-    function hasFirebaseConfig(cfg){return cfg&&cfg.apiKey&&cfg.projectId&&cfg.appId&&(cfg.databaseURL||cfg.authDomain)}
-    const cfg=window.DASHBOARD_FIREBASE_CONFIG; if(hasFirebaseConfig(cfg)){try{const app=initializeApp(cfg);db=getDatabase(app);firebaseReady=true;document.getElementById('syncTag').textContent='Sync: Firebase live';onValue(ref(db,'dashboards/'+room+'/'+PAGE_KEY),(snap)=>{if(snap.exists()){state={...DEFAULTS,...snap.val()};saveLocal(state);render();}})}catch(err){console.error(err)}}
-    window.toggleMode=function(){const url=new URL(location.href); if(isPit) url.searchParams.delete('pit'); else url.searchParams.set('pit','1'); location.href=url.toString();};
-    window.quickStatus=function(label,note){document.getElementById('status').value=label;document.getElementById('note').value=note;pushUpdate();};
-    window.fillDemo=function(){Object.entries(DEMO).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;}); pushUpdate();};
-    window.copyLink=async function(){const url=new URL(location.href); url.searchParams.delete('pit'); try{await navigator.clipboard.writeText(url.toString()); alert('Driver link gekopieerd');}catch{prompt('Kopieer deze driver link:',url.toString());}};
-    window.resetDashboard=async function(){if(!confirm('Weet je zeker dat je dit dashboard wilt resetten?')) return; state={...DEFAULTS}; saveLocal(state); render(); if(firebaseReady) await set(ref(db,'dashboards/'+room+'/'+PAGE_KEY),state);};
-    window.pushUpdate=async function(){const next={...state}; FIELD_IDS.forEach(id=>{const el=document.getElementById(id); if(el) next[id]=el.value.trim();}); next.status=document.getElementById('status').value.trim(); next.note=document.getElementById('note').value.trim(); state=next; saveLocal(state); render(); if(firebaseReady) await set(ref(db,'dashboards/'+room+'/'+PAGE_KEY),state);};
-    function statusClass(text){const t=(text||'').toUpperCase(); if(['PUSH','ATTACK','GO','TRACK'].some(k=>t.includes(k))) return 'green'; if(['BOX','PIT','DEFEND','SAVE','COOL'].some(k=>t.includes(k))) return 'red'; return 'yellow';}
-    function render(){document.body.classList.toggle('hidePit',!isPit); document.getElementById('modeButton').textContent=isPit?'Open driver view':'Open pitwall'; document.getElementById('modeText').textContent=isPit?'Pitwall view · invoeren en direct doorsturen naar driver':'Driver view · grote leesbare data voor telefoon op stuur'; document.getElementById('heroValue').textContent=state.headline||'--'; document.getElementById('heroSubtitle').textContent=state.note||'Wacht op pitwall update'; const s=document.getElementById('statusValue'); s.textContent=state.status||'READY'; s.className='statusMain '+statusClass(state.status); document.getElementById('statusNote').textContent=state.note||'Standaard status'; [['trackBest','trackBestDisplay','trackBestSub'],['gap','gapDisplay','gapSub'],['target','targetDisplay','targetSub']].forEach(([key,disp,sub])=>{document.getElementById(disp).textContent=state[key]||'--'; document.getElementById(sub).textContent=state[key]?'live update':'\u00a0';}); FIELD_IDS.forEach(id=>{const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=state[id]||'';}); if(document.activeElement!==document.getElementById('status')) document.getElementById('status').value=state.status||''; if(document.activeElement!==document.getElementById('note')) document.getElementById('note').value=state.note||'';}
-    render();
+    import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+    const pageKey = 'quali';
+    const pageTitle = 'Quali';
+    const params = new URLSearchParams(location.search);
+    const room = params.get('room') || 'oldenzaal';
+    const isPit = params.get('pit') === '1';
+    const isFocus = params.get('focus') !== '0' && !isPit;
+    const storageKey = 'race_dash_' + pageKey + '_' + room;
+    const defaults = {
+      headline: 'READY',
+      headlineSub: 'Wachten op update',
+      primary: '',
+      gap: '',
+      target: '',
+      room: room,
+      updatedAt: '',
+      coach: '',
+      statusColor: 'gold'
+    };
+
+    let live = false;
+    let dbRef = null;
+
+    const colors = { gold: 'var(--gold)', green: 'var(--green)', red: 'var(--danger)', blue: 'var(--accent)' };
+
+    function qs(id) { return document.getElementById(id); }
+    function readLocal() { try { return JSON.parse(localStorage.getItem(storageKey)) || {...defaults}; } catch { return {...defaults}; } }
+    function saveLocal(data) { localStorage.setItem(storageKey, JSON.stringify(data)); }
+    function syncStatus(text) { document.querySelectorAll('[data-sync]').forEach(el => el.textContent = text); }
+    function timeLabel(iso) { return iso ? new Date(iso).toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '--:--'; }
+
+    function render(data) {
+      const safe = { ...defaults, ...data };
+      qs('heroValue').textContent = safe.headline || 'READY';
+      qs('heroSub').textContent = safe.headlineSub || 'Wachten op update';
+      qs('modeChip').textContent = pageTitle.toUpperCase();
+      qs('primaryValue').textContent = safe.primary || '—';
+      qs('gapValue').textContent = safe.gap || '—';
+      qs('targetValue').textContent = safe.target || '—';
+      qs('roomValue').textContent = safe.room || room;
+      qs('coachValue').textContent = safe.coach || 'Live update';
+      qs('updatedValue').textContent = timeLabel(safe.updatedAt);
+      qs('heroValue').style.color = colors[safe.statusColor] || 'var(--gold)';
+      document.querySelectorAll('[data-updated]').forEach(el => el.textContent = timeLabel(safe.updatedAt));
+
+      if (isPit) {
+        ['headline','headlineSub','primary','gap','target','coach','room'].forEach(key => {
+          const el = qs('inp_' + key);
+          if (el && document.activeElement !== el) el.value = safe[key] || '';
+        });
+        const statusSel = qs('inp_statusColor');
+        if (statusSel && document.activeElement !== statusSel) statusSel.value = safe.statusColor || 'gold';
+      }
+    }
+
+    function collect() {
+      return {
+        headline: qs('inp_headline')?.value.trim() || '',
+        headlineSub: qs('inp_headlineSub')?.value.trim() || '',
+        primary: qs('inp_primary')?.value.trim() || '',
+        gap: qs('inp_gap')?.value.trim() || '',
+        target: qs('inp_target')?.value.trim() || '',
+        coach: qs('inp_coach')?.value.trim() || '',
+        room: qs('inp_room')?.value.trim() || room,
+        statusColor: qs('inp_statusColor')?.value || 'gold',
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    async function writeData(data) {
+      saveLocal(data);
+      render(data);
+      if (live && dbRef) await set(dbRef, data);
+      else syncStatus('sync lokaal');
+    }
+
+    window.submitForm = () => writeData(collect());
+    window.applyQuick = (headline, sub, color='gold') => {
+      qs('inp_headline').value = headline;
+      qs('inp_headlineSub').value = sub;
+      qs('inp_statusColor').value = color;
+      writeData(collect());
+    };
+    window.resetForm = () => writeData({...defaults, room, updatedAt: new Date().toISOString()});
+    window.toggleFullscreen = async () => {
+      if (!document.fullscreenElement) {
+        try { await document.documentElement.requestFullscreen(); } catch (e) { console.error(e); }
+      } else {
+        await document.exitFullscreen();
+      }
+    };
+
+    async function init() {
+      document.body.classList.toggle('pit', isPit);
+      document.body.classList.toggle('focus', isFocus);
+      qs('roomMeta').textContent = room;
+      qs('switchLink').href = (() => { const u = new URL(location.href); if (isPit) u.searchParams.delete('pit'); else u.searchParams.set('pit','1'); return u.toString(); })();
+      qs('switchLink').textContent = isPit ? 'Open driver' : 'Open pitwall';
+      qs('focusLink').href = (() => { const u = new URL(location.href); if (u.searchParams.get('focus') === '0') u.searchParams.delete('focus'); else u.searchParams.set('focus','0'); return u.toString(); })();
+      qs('focusLink').textContent = isPit ? 'Driver preview' : (isFocus ? 'Toon volledige view' : 'Focus mode');
+
+      const local = readLocal();
+      render(local);
+      if (isPit) qs('inp_room').value = local.room || room;
+
+      const cfg = window.RACE_FIREBASE_CONFIG;
+      if (cfg && cfg.databaseURL) {
+        try {
+          const app = initializeApp(cfg, pageKey + '_' + room);
+          const db = getDatabase(app);
+          dbRef = ref(db, 'rooms/' + room + '/' + pageKey);
+          onValue(dbRef, snap => {
+            const data = snap.val() || local || defaults;
+            saveLocal(data);
+            render(data);
+          });
+          live = true;
+          syncStatus('Firebase live');
+        } catch (e) {
+          console.error(e);
+          syncStatus('sync lokaal');
+        }
+      } else {
+        syncStatus('sync lokaal');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
   </script>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Driver dashboard</div>
+        <div class="title">Quali</div>
+        <div class="meta">room <strong id="roomMeta"></strong> · <span data-sync>sync lokaal</span> · update <span data-updated>--:--</span></div>
+      </div>
+      <div class="controls">
+        <a class="btn ghost" id="focusLink" href="#">Focus mode</a>
+        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
+        <a class="btn" id="switchLink" href="#">Open pitwall</a>
+      </div>
+    </div>
+
+    <div class="screen driverwrap">
+      <section class="hero">
+        <div>
+          <div class="hero-label">Status</div>
+          <div class="hero-value" id="heroValue">READY</div>
+          <div class="hero-sub" id="heroSub">Wachten op update</div>
+        </div>
+        <div class="mode-chip" id="modeChip">QUALI</div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <div class="label">Mijn beste ronde</div>
+          <div class="value" id="primaryValue">—</div>
+          <div class="note" id="coachValue">Live update</div>
+        </article>
+        <article class="card">
+          <div class="label">Gap</div>
+          <div class="value" id="gapValue">—</div>
+          <div class="note">Direct vanaf pitwall</div>
+        </article>
+        <article class="card">
+          <div class="label">Target lap</div>
+          <div class="value" id="targetValue">—</div>
+          <div class="note">Volgende referentie</div>
+        </article>
+        <article class="card">
+          <div class="label">Room</div>
+          <div class="value" id="roomValue">—</div>
+          <div class="note">Laatste update <span id="updatedValue">--:--</span></div>
+        </article>
+      </section>
+    </div>
+
+    <div class="screen pitwrap">
+      <div class="pitgrid">
+        <div class="field">
+          <label for="inp_headline">Grote status</label>
+          <input id="inp_headline" placeholder="LAST / PUSH / BOX / COOL">
+        </div>
+        <div class="field">
+          <label for="inp_statusColor">Status kleur</label>
+          <select id="inp_statusColor">
+            <option value="gold">Geel</option>
+            <option value="green">Groen</option>
+            <option value="red">Rood</option>
+            <option value="blue">Blauw</option>
+          </select>
+        </div>
+        <div class="field span2">
+          <label for="inp_headlineSub">Subtekst onder status</label>
+          <input id="inp_headlineSub" placeholder="Laatste kans ronde / Pit this lap / Fuel save">
+        </div>
+        <div class="field">
+          <label for="inp_primary">Mijn beste ronde</label>
+          <input id="inp_primary" placeholder="52.341 of P3">
+        </div>
+        <div class="field">
+          <label for="inp_gap">Gap</label>
+          <input id="inp_gap" placeholder="+0.182">
+        </div>
+        <div class="field">
+          <label for="inp_target">Target lap</label>
+          <input id="inp_target" placeholder="51.990">
+        </div>
+        <div class="field">
+          <label for="inp_room">Room naam</label>
+          <input id="inp_room" placeholder="oldenzaal">
+        </div>
+        <div class="field span2">
+          <label for="inp_coach">Kleine notitie</label>
+          <textarea id="inp_coach" placeholder="Banden op temperatuur / lijn netjes houden"></textarea>
+        </div>
+        <div class="field span2">
+          <label>Snelle knoppen</label>
+          <div class="quick">
+            <button onclick="applyQuick('LAST','Laatste kans ronde','gold')">LAST</button>
+            <button onclick="applyQuick('PUSH','Push this lap','green')">PUSH</button>
+            <button onclick="applyQuick('BOX','Pit this lap','red')">BOX</button>
+            <button onclick="applyQuick('SAVE','Fuel save','blue')">SAVE</button>
+            <button onclick="applyQuick('COOL','Cool tyres','blue')">COOL</button>
+          </div>
+        </div>
+        <div class="field span2">
+          <div class="quick">
+            <button class="primary" onclick="submitForm()">Verstuur update</button>
+            <button onclick="resetForm()">Reset</button>
+            <button onclick="toggleFullscreen()">Fullscreen preview</button>
+          </div>
+          <div class="footer">Driver hoeft niets te bedienen. Focus mode toont alleen de belangrijkste info.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
