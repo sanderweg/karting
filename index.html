@@ -3,221 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Race Dashboard Hub</title>
+  <meta name="theme-color" content="#070b11" />
+  <title>Race Dash</title>
   <style>
-    :root{
-      --bg:#060816;
-      --panel:#11162a;
-      --panel-2:#171d35;
-      --text:#f5f7ff;
-      --muted:#9aa3bd;
-      --line:rgba(255,255,255,.09);
-      --accent:#6ea8ff;
-      --accent-2:#66ffd1;
-      --shadow:0 24px 60px rgba(0,0,0,.45);
-      --radius:24px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family:Inter,Arial,Helvetica,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(110,168,255,.16), transparent 30%),
-        radial-gradient(circle at top right, rgba(102,255,209,.10), transparent 25%),
-        linear-gradient(180deg, #070b18 0%, #05070f 100%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    }
-    .app{width:min(1120px,100%)}
-    .hero{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:32px;
-      box-shadow:var(--shadow);
-      padding:28px;
-      margin-bottom:20px;
-    }
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    h1{font-size:clamp(32px,6vw,56px);margin:18px 0 10px}
-    .lead{max-width:720px;color:var(--muted);font-size:18px;line-height:1.5}
-    .setup{
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:18px;
-      margin-top:22px;
-    }
-    .panel{
-      background:linear-gradient(180deg, var(--panel-2), var(--panel));
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:20px;
-    }
-    .label{font-size:13px;color:var(--muted);margin-bottom:8px;display:block}
-    input, select{
-      width:100%;
-      border:1px solid var(--line);
-      background:#0a1020;
-      color:var(--text);
-      padding:16px 16px;
-      font-size:16px;
-      border-radius:16px;
-      outline:none;
-    }
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .hint{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45}
-    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
-    button, .button{
-      appearance:none;border:none;cursor:pointer;text-decoration:none;
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      border-radius:16px;padding:14px 18px;font-size:15px;font-weight:700;
-      transition:transform .16s ease, opacity .16s ease, border-color .16s ease;
-    }
-    button:hover,.button:hover{transform:translateY(-1px)}
-    .primary{background:linear-gradient(135deg,var(--accent),#90b9ff);color:#07101f}
-    .secondary{background:#0b1222;color:var(--text);border:1px solid var(--line)}
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .card{
-      background:linear-gradient(180deg, var(--panel-2), var(--panel));
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:22px;
-      box-shadow:var(--shadow);
-    }
-    .card h3{margin:14px 0 8px;font-size:24px}
-    .card p{margin:0;color:var(--muted);line-height:1.5;min-height:66px}
-    .icon{
-      width:52px;height:52px;border-radius:16px;
-      display:grid;place-items:center;font-size:24px;
-      background:rgba(110,168,255,.12);border:1px solid var(--line)
-    }
-    .cardActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-    .mini{font-size:13px;padding:12px 14px}
-    .footer{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
-    @media (max-width:900px){
-      .setup,.cards{grid-template-columns:1fr}
-    }
+    :root{--bg:#06080d;--bg2:#0c1119;--panel:#111825;--border:rgba(255,255,255,.08);--text:#f6f8fb;--muted:#9ca7ba;--accent:#2dd4bf;--shadow:0 18px 50px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at top, rgba(96,165,250,.16), transparent 26%),linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);min-height:100vh;padding:20px}
+    .wrap{max-width:1080px;margin:0 auto}.hero{padding:18px 0 10px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}.hero h1{margin:10px 0 8px;font-size:clamp(36px,8vw,68px);letter-spacing:-.05em;line-height:.95}.hero p{margin:0;color:var(--muted);font-size:18px;max-width:54ch;line-height:1.55}
+    .setup{margin:18px 0 24px;padding:18px;border-radius:24px;border:1px solid var(--border);background:rgba(17,24,37,.82);box-shadow:var(--shadow)}
+    .setup-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}.setup input{width:100%;padding:16px;background:#0a1018;color:#fff;border:1px solid rgba(255,255,255,.08);border-radius:16px;font:inherit}.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:16px 18px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-weight:800;color:#fff;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{padding:20px;border-radius:24px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(21,29,43,.98), rgba(12,17,25,.96));box-shadow:var(--shadow);text-decoration:none;color:#fff}.card h2{margin:12px 0 8px;font-size:30px;letter-spacing:-.04em}.card p{margin:0;color:var(--muted);line-height:1.55}.tag{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.18);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#dffaf6}.foot{margin-top:18px;color:var(--muted);font-size:14px}
+    @media (max-width:760px){.setup-grid{grid-template-columns:1fr}.hero p{font-size:16px}}
   </style>
 </head>
 <body>
-  <div class="app">
-    <section class="hero">
-      <div class="eyebrow">Driver + Pitwall Dashboard</div>
-      <h1>Professioneel race dashboard voor telefoon en pitmuur</h1>
-      <p class="lead">De driver hoeft niets te doen. De pitwall voert info in en de telefoon op het stuur toont direct grote, duidelijke data. Vul hieronder alleen je teamnaam in en kies daarna de juiste view.</p>
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Race Dash</div>
+      <h1>Algemene driver + pitwall dashboards</h1>
+      <p>Professionele stuurvriendelijke layouts voor quali, sprint en endurance. Driver kijkt alleen. Pitwall voert updates in via dezelfde pagina in pitwall mode.</p>
+    </div>
 
-      <div class="setup">
-        <div class="panel">
-          <label class="label" for="room">Team / room naam</label>
-          <input id="room" value="team-a" placeholder="bijvoorbeeld team-a" />
-
-          <div class="row" style="margin-top:12px;">
-            <div>
-              <label class="label" for="mode">Standaard view</label>
-              <select id="mode">
-                <option value="driver">Driver view</option>
-                <option value="pit">Pitwall view</option>
-              </select>
-            </div>
-            <div>
-              <label class="label" for="device">Aanbevolen apparaat</label>
-              <select id="device">
-                <option>Telefoon op stuur</option>
-                <option>Laptop / tablet pitwall</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="primary" onclick="openDashboard('quali')">Open Quali</button>
-            <button class="secondary" onclick="openDashboard('sprint')">Open Sprint</button>
-            <button class="secondary" onclick="openDashboard('endurance')">Open Endurance</button>
-          </div>
-
-          <div class="hint">Gebruik op beide apparaten exact dezelfde roomnaam. Voor live sync hoef je daarna alleen nog <strong>firebase-config.js</strong> één keer in te vullen.</div>
-        </div>
-
-        <div class="panel">
-          <div class="label">Snelle uitleg</div>
-          <div style="font-size:22px;font-weight:700;margin-bottom:10px">Zo werkt het</div>
-          <div style="display:grid;gap:12px;color:var(--muted);line-height:1.5">
-            <div><strong style="color:var(--text)">1.</strong> Open de driver view op de telefoon.</div>
-            <div><strong style="color:var(--text)">2.</strong> Open de pitwall view op de laptop of tablet.</div>
-            <div><strong style="color:var(--text)">3.</strong> Pitwall drukt op knoppen zoals PUSH, BOX of update de velden.</div>
-            <div><strong style="color:var(--text)">4.</strong> Driver ziet alles direct groot in beeld.</div>
-          </div>
-        </div>
+    <div class="setup">
+      <div class="setup-grid">
+        <input id="room" value="team-a" placeholder="team-a" />
+        <button class="btn" id="openDriver">Open driver</button>
+        <button class="btn" id="openPit">Open pitwall</button>
       </div>
-    </section>
+    </div>
 
-    <section class="cards">
-      <article class="card">
-        <div class="icon">⏱️</div>
-        <h3>Quali</h3>
-        <p>Focus op beste ronde, snelste baanronde en het gat. Rustig, helder en perfect voor één snelle opdracht tegelijk.</p>
-        <div class="cardActions">
-          <a class="button primary mini" href="#" onclick="return navTo('quali','driver')">Driver</a>
-          <a class="button secondary mini" href="#" onclick="return navTo('quali','pit')">Pitwall</a>
-        </div>
-      </article>
+    <div class="grid">
+      <a class="card" href="quali.html?room=team-a">
+        <span class="tag">Qualifying</span>
+        <h2>Quali</h2>
+        <p>Beste ronde, baansnelste, gap, positie en track status in een rustige high-contrast view.</p>
+      </a>
+      <a class="card" href="sprint.html?room=team-a">
+        <span class="tag">Race</span>
+        <h2>Sprint</h2>
+        <p>Positie, tijd over, verkeer voor/achter en een duidelijk hoofdbericht zoals PUSH of DEFEND.</p>
+      </a>
+      <a class="card" href="endurance.html?room=team-a">
+        <span class="tag">Long run</span>
+        <h2>Endurance</h2>
+        <p>Stint management, pit window en traffic info met dezelfde eenvoudige bediening voor de pitmuur.</p>
+      </a>
+    </div>
 
-      <article class="card">
-        <div class="icon">🏎️</div>
-        <h3>Sprint</h3>
-        <p>Positie, targets voor en achter, race status en resterende tijd. Met snelle engineer-knoppen voor duidelijke calls.</p>
-        <div class="cardActions">
-          <a class="button primary mini" href="#" onclick="return navTo('sprint','driver')">Driver</a>
-          <a class="button secondary mini" href="#" onclick="return navTo('sprint','pit')">Pitwall</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="icon">⛽</div>
-        <h3>Endurance</h3>
-        <p>Alles voor langere runs: stint, fuel/stop strategie, laatste call en duidelijke communicatie van pitmuur naar coureur.</p>
-        <div class="cardActions">
-          <a class="button primary mini" href="#" onclick="return navTo('endurance','driver')">Driver</a>
-          <a class="button secondary mini" href="#" onclick="return navTo('endurance','pit')">Pitwall</a>
-        </div>
-      </article>
-    </section>
-
-    <div class="footer">Tip: publiceer alle bestanden samen op GitHub Pages in dezelfde map.</div>
+    <div class="foot">Upload deze bestanden samen met <strong>firebase-config.js</strong> naar dezelfde GitHub Pages map.</div>
   </div>
-
   <script>
-    function cleanRoom(value){
-      return (value || 'team-a').trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
-    }
-    function makeUrl(page, mode){
+    function cleanRoom(v){return (v || 'team-a').trim().toLowerCase().replace(/[^a-z0-9-_]/g,'-') || 'team-a';}
+    function openPage(pit){
       const room = cleanRoom(document.getElementById('room').value);
-      const params = new URLSearchParams({ room });
-      if(mode === 'pit') params.set('pit','1');
-      return `${page}.html?${params.toString()}`;
+      const base = 'quali.html?room=' + encodeURIComponent(room);
+      location.href = pit ? base + '&pit=1' : base;
     }
-    function navTo(page, mode){
-      window.location.href = makeUrl(page, mode);
-      return false;
-    }
-    function openDashboard(page){
-      const mode = document.getElementById('mode').value === 'pit' ? 'pit' : 'driver';
-      window.location.href = makeUrl(page, mode);
-    }
+    document.getElementById('openDriver').addEventListener('click', () => openPage(false));
+    document.getElementById('openPit').addEventListener('click', () => openPage(true));
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const room = cleanRoom(document.getElementById('room').value);
+        const href = new URL(card.getAttribute('href'), location.href);
+        href.searchParams.set('room', room);
+        location.href = href.toString();
+      });
+    });
   </script>
 </body>
 </html>
