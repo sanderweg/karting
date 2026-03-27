@@ -1,76 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-<title>Quali Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quali V4 Pro</title>
+  <style>
+    :root{
+      --panel:rgba(0,0,0,.86);
+      --card:#101010;
+      --card2:#171717;
+      --border:#2d2d2d;
+      --text:#fff;
+      --muted:#b8b8b8;
+      --green:#31ff62;
+      --red:#ff5252;
+      --yellow:#ffd84a;
+    }
 
-<script src="code.js"></script>
+    *{box-sizing:border-box}
 
-<style>
-body{
-    font-family: Arial;
-    background:#111;
-    color:white;
-    text-align:center;
-}
+    body{
+      margin:0;
+      background:#000;
+      color:#fff;
+      font-family:Arial, Helvetica, sans-serif;
+      overflow:hidden;
+    }
 
-.box{
-    margin:20px;
-    padding:20px;
-    background:#222;
-    border-radius:10px;
-    font-size:30px;
-}
-</style>
+    #overlay{
+      position:fixed;
+      top:14px;
+      left:14px;
+      z-index:9999;
+      width:min(400px, calc(100vw - 28px));
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 16px 40px rgba(0,0,0,.45);
+    }
 
+    h1{
+      margin:0 0 6px 0;
+      font-size:28px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .field{
+      margin-bottom:12px;
+    }
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    select{
+      width:100%;
+      border:1px solid #444;
+      background:#0d0d0d;
+      color:#fff;
+      border-radius:12px;
+      padding:12px 13px;
+      font-size:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card2),var(--card));
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      margin-top:10px;
+    }
+
+    .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .value{
+      font-size:34px;
+      font-weight:700;
+      line-height:1.1;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .action{
+      border:none;
+      background:#151515;
+      color:#fff;
+      border-radius:14px;
+      padding:14px 10px;
+      font-size:16px;
+      cursor:pointer;
+      border:1px solid var(--border);
+    }
+
+    .action:hover{
+      border-color:#4d43ff;
+    }
+
+    .green{color:var(--green)}
+    .red{color:var(--red)}
+    .yellow{color:var(--yellow)}
+
+    .buttonsTop{
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .iconBtn{
+      border:1px solid var(--border);
+      background:#111;
+      color:#fff;
+      border-radius:12px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .collapsed #overlayBody{display:none}
+    .compact #overlay{width:300px}
+
+    iframe{
+      width:100vw;
+      height:100vh;
+      border:0;
+    }
+  </style>
 </head>
 <body>
+  <div id="overlay">
+    <div class="buttonsTop">
+      <button class="iconBtn" onclick="toggleCompact()">Compact</button>
+      <button class="iconBtn" onclick="toggleCollapse()">Verberg</button>
+    </div>
 
-<h1>QUALI</h1>
+    <div id="overlayBody">
+      <h1>Quali</h1>
+      <div class="subtitle">V4 Pro overlay</div>
 
-<div class="box">Mijn snelste: <span id="myBest">-</span></div>
-<div class="box">Snelste baan: <span id="best">-</span></div>
-<div class="box">Gap: <span id="gap">-</span></div>
+      <div class="field">
+        <label for="kart">Kartnummer</label>
+        <select id="kart">
+          <option>1</option>
+          <option>4</option>
+          <option>5</option>
+          <option>11</option>
+          <option>13</option>
+          <option>18</option>
+        </select>
+      </div>
 
-<script>
-let kart = new URLSearchParams(window.location.search).get("kart")
+      <div class="card">
+        <div class="label">Mijn snelste</div>
+        <div class="value" id="myBest">👀</div>
+      </div>
 
-async function update(){
+      <div class="card">
+        <div class="label">Snelste van de baan</div>
+        <div class="value" id="trackBest">👀</div>
+      </div>
 
-let rows = await getRows()
+      <div class="card">
+        <div class="label">Gap</div>
+        <div class="value yellow" id="gap">👀</div>
+      </div>
 
-if(!rows) return
+      <div class="controls">
+        <button class="action" onclick="setMyBest()">Mijn tijd</button>
+        <button class="action" onclick="setTrackBest()">Baan tijd</button>
+        <button class="action" onclick="calcGap()">Bereken gap</button>
+        <button class="action" onclick="resetQuali()">Reset</button>
+      </div>
+    </div>
+  </div>
 
-let myTime = null
-let bestTime = null
+  <iframe src="https://www.apex-timing.com/live-timing/kartbaanoldenzaal/"></iframe>
 
-rows.forEach(r => {
+  <script>
+    function askValue(title, currentValue = "") {
+      const value = prompt(title, currentValue);
+      if (value === null) return null;
+      return value.trim();
+    }
 
-let pos = r.children
+    function setMyBest() {
+      const el = document.getElementById("myBest");
+      const value = askValue("Wat is jouw snelste tijd?", el.textContent);
+      if (value) el.textContent = value;
+    }
 
-let kartNr = pos[1]?.innerText.trim()
-let time = pos[3]?.innerText.trim()
+    function setTrackBest() {
+      const el = document.getElementById("trackBest");
+      const value = askValue("Wat is de snelste tijd van de baan?", el.textContent);
+      if (value) el.textContent = value;
+    }
 
-if(!time || time === "-") return
+    function toSeconds(t) {
+      if (!t || t === "👀") return null;
+      const parts = t.split(":");
+      if (parts.length === 2) {
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+      }
+      return parseFloat(t);
+    }
 
-if(!bestTime) bestTime = time
+    function calcGap() {
+      const myBest = document.getElementById("myBest").textContent.trim();
+      const trackBest = document.getElementById("trackBest").textContent.trim();
+      const gapEl = document.getElementById("gap");
 
-if(kartNr == kart){
-    myTime = time
-}
+      const a = toSeconds(myBest);
+      const b = toSeconds(trackBest);
 
-})
+      if (a === null || b === null || isNaN(a) || isNaN(b)) {
+        gapEl.textContent = "👀";
+        gapEl.className = "value yellow";
+        return;
+      }
 
-document.getElementById("myBest").innerText = myTime || "-"
-document.getElementById("best").innerText = bestTime || "-"
+      const diff = (a - b).toFixed(3);
+      gapEl.textContent = "+" + diff;
+      gapEl.className = "value";
+      if (parseFloat(diff) <= 0.200) gapEl.classList.add("green");
+      else if (parseFloat(diff) <= 0.500) gapEl.classList.add("yellow");
+      else gapEl.classList.add("red");
+    }
 
-if(myTime && bestTime){
-    document.getElementById("gap").innerText = calcGap(myTime, bestTime)
-}
+    function resetQuali() {
+      document.getElementById("myBest").textContent = "👀";
+      document.getElementById("trackBest").textContent = "👀";
+      const g = document.getElementById("gap");
+      g.textContent = "👀";
+      g.className = "value yellow";
+    }
 
-}
+    function toggleCollapse() {
+      document.body.classList.toggle("collapsed");
+    }
 
-setInterval(update, 2000)
-</script>
-
+    function toggleCompact() {
+      document.body.classList.toggle("compact");
+    }
+  </script>
 </body>
 </html>
